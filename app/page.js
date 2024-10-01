@@ -1,15 +1,9 @@
-import { Header } from "@/components/Header/Header";
-import { Interface } from "@/components/MainSectoin/Interface";
-import { MainSectionTopHeader } from "@/components/MainSectoin/MainSectionTopHeader";
+import { MainSection } from "@/components/MainSectoin/MainSection";
 
 export default function Home() {
   return (
-    <div className="w-full">
-      <Header />
-      <div className="w-full px-4 mt-3">
-        <MainSectionTopHeader />
-        <Interface />
-      </div>
+    <div className="w-full md:w-2/3 lg:w-3/4">
+      <MainSection />
     </div>
   );
 }
