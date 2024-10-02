@@ -26,9 +26,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <div className="w-screen h-[calc(100vh_-_56px)] flex">
+        <div className="w-screen max-w-[1268px] mx-auto h-[calc(100vh_-_56px)] flex">
           <Sidebar />
-          <div className="w-full flex-1 px-8 py-6 overflow-y-auto">
+          <div className="w-full flex-1 px-4 py-6 overflow-y-auto scrollbar-hide">
             {children}
             <Toaster position="bottom-left" />
           </div>

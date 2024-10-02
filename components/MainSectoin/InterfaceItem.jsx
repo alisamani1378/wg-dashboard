@@ -1,21 +1,39 @@
+"use client";
+import { UpdateConfigurationStatus } from "@/api/interface";
 import Link from "next/link";
+import { useState } from "react";
 import {
   BsChevronRight,
   BsArrowDownUp,
   BsArrowDown,
   BsArrowUp,
 } from "react-icons/bs";
+import { SyncLoader } from "react-spinners";
 
 export const InterfaceItem = ({ interfaceDetail }) => {
-  console.log(interfaceDetail);
-  const { name, peers, privateKey } = interfaceDetail;
-  const status = false;
+  const { id, name, peers, privateKey, status } = interfaceDetail;
+  console.log(status);
+
+  const [ChangeStatusLoading, setChangeStatusLoading] = useState(false);
+
+  const ChangeStatus = async () => {
+    setChangeStatusLoading(true);
+    const ChangeStatusValue = {
+      status: !interfaceDetail.status,
+      id: interfaceDetail.id,
+    };
+    await UpdateConfigurationStatus(ChangeStatusValue)
+      .then((res) => {
+        console.log(res);
+      })
+      .finally(() => setChangeStatusLoading(false));
+  };
 
   return (
-    <div className="w-full my-4 border-2 border-[#3D3D3D] rounded hover:rounded-lg hover:border-[rgb(255,74,0)] dark:hover:border-blue-400 overflow-hidden transition-all duration-150">
+    <div className="w-full my-4 border-2 border-[#3D3D3D] rounded hover:rounded-lg hover:border-blue-400 overflow-hidden transition-all duration-150">
       <Link
-        href={"/"}
-        className="p-4 border-b-2 border-b-[#3D3D3D] flex justify-between items-center dark:hover:bg-gray-950 hover:bg-gray-100"
+        href={`configuration/${id}`}
+        className="p-4 border-b-2 border-b-[#3D3D3D] flex justify-between items-center hover:bg-gray-950"
       >
         <div className="">
           <span className="w-[6px] h-[6px] mr-2 bg-green-500 rounded-full animate-ping"></span>
@@ -46,19 +64,25 @@ export const InterfaceItem = ({ interfaceDetail }) => {
             {privateKey}
           </span>
         </div>
-        <div className="flex flex-col justify-center md:flex-row md:items-center md:gap-2">
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              checked={status}
-              className="sr-only peer"
-              value=""
-            />
-            <div
-              className={`group peer bg-white rounded-full duration-300 w-8 h-4 ring-2 ring-red-500 after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500  after:rounded-full after:absolute after:h-2 after:w-2 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-95 peer-checked:after:translate-x-4`}
-            ></div>
-          </label>
-        </div>
+        {ChangeStatusLoading ? (
+          <>
+            <SyncLoader color="#fff" size={8} />
+          </>
+        ) : (
+          <div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={status}
+                className="sr-only peer"
+                onChange={ChangeStatus}
+              />
+              <div
+                className={`group peer bg-white rounded-full duration-300 w-8 h-4 ring-2 ring-red-500 after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500  after:rounded-full after:absolute after:h-2 after:w-2 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-95 peer-checked:after:translate-x-4`}
+              ></div>
+            </label>
+          </div>
+        )}
       </div>
     </div>
   );

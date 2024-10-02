@@ -8,7 +8,7 @@ export const ConfigurationHeader = () => {
       className="w-fit flex items-center gap-4 justify-start text-[28px] font-bold"
     >
       <BsChevronLeft />
-      New Configuration
+      New Interface
     </Link>
   );
 };

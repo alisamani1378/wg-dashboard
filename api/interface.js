@@ -10,4 +10,9 @@ const PostConfigurationInterface = async (payload) => {
   return data;
 };
 
-export { GetInterface, PostConfigurationInterface };
+const UpdateConfigurationStatus = async (payload) => {
+  const { data } = await client.put(`/Interface`, payload);
+  return data;
+};
+
+export { GetInterface, PostConfigurationInterface, UpdateConfigurationStatus };

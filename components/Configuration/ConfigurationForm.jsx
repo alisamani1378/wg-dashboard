@@ -13,11 +13,11 @@ export const ConfigurationForm = () => {
     address: window.location.hostname,
     endPoint: window.location.hostname,
     saveConfig: true,
-    preUp: 0,
-    postUp: 0,
-    preDown: 0,
-    postDown: 0,
-    listenPort: 0,
+    preUp: null,
+    postUp: null,
+    preDown: null,
+    postDown: null,
+    listenPort: null,
     privateKey: "",
     publicKey: "",
     name: "",
@@ -50,8 +50,7 @@ export const ConfigurationForm = () => {
     e.preventDefault();
     setConfigValue({
       ...configValue,
-      [e.target.name]:
-        e.target.type === "number" ? +e.target.value : e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -70,13 +69,18 @@ export const ConfigurationForm = () => {
 
     console.log(configValue);
 
-    await PostConfigurationInterface(configValue).then((res) => {
-      console.log(res);
-      if (res.isSuccess) {
-        toast.success("successfull");
-        router.push("/");
-      } else toast.error(res.message);
-    });
+    await PostConfigurationInterface(configValue)
+      .then((res) => {
+        console.log(res);
+        if (res.isSuccess) {
+          toast.success("successfull");
+          router.push("/");
+        } else toast.error(res.message);
+      })
+      .catch((er) => {
+        console.log(er);
+        toast.error("failed");
+      });
   };
 
   return (
@@ -84,7 +88,7 @@ export const ConfigurationForm = () => {
       onSubmit={submitPostConfigValue}
       className="w-full flex flex-col gap-6 pt-6"
     >
-      <ConfigurationFormCard title={"Configuration Name"}>
+      <ConfigurationFormCard title={"Interface Name"}>
         <input
           name="name"
           onChange={handleConfigInputValue}
@@ -93,9 +97,7 @@ export const ConfigurationForm = () => {
           className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
         />
       </ConfigurationFormCard>
-      <ConfigurationFormCard
-        title={"Private Key / Public Key / Pre-Shared Key"}
-      >
+      <ConfigurationFormCard title={"Private Key / Public Key"}>
         <div>
           <label className="mb-2 block font-bold">PRIVATE KEY</label>
           <div className="w-full flex items-center">
@@ -212,7 +214,7 @@ export const ConfigurationForm = () => {
           //   disabled={isValid}
           className="w-fit flex justify-center items-center gap-3 px-4 py-3 mt-4 md:m-0 rounded-lg transition-all duration-500 bg-gradient-to-br from-[rgba(255,74,0,1)] via-[rgba(0,157,255,1)] to-[#009dff] bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Save Configuration
+          Save Interface
           <BsFillSaveFill />
         </button>
       </div>
