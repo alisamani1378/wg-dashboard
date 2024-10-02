@@ -11,7 +11,10 @@ export const Interfaces = () => {
   const fetchInterFace = () => {
     GetInterface()
       .then((res) => {
-        setInterFaces(res.interfaces);
+        if (res.isSuccess) {
+          setInterFaces(res.data);
+        }
+        console.log(res);
       })
       .catch((er) => {
         console.log(er);

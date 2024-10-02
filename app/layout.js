@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import { Header } from "@/components/Header/Header";
 import { Sidebar } from "@/components/Sidebar/Sidebar";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
           <Sidebar />
           <div className="w-full flex-1 px-8 py-6 overflow-y-auto">
             {children}
+            <Toaster position="bottom-left" />
           </div>
         </div>
       </body>

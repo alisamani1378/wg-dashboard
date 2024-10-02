@@ -1,14 +1,17 @@
 "use client";
 import { PostConfigurationInterface } from "@/api/interface";
 import { ConfigurationFormCard } from "@/components/Configuration/ConfigurationFormCard";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { BsFillSaveFill, BsArrowRepeat } from "react-icons/bs";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 
 export const ConfigurationForm = () => {
   const [configValue, setConfigValue] = useState({
-    address: "",
+    address: window.location.hostname,
+    endPoint: window.location.hostname,
     saveConfig: true,
     preUp: 0,
     postUp: 0,
@@ -20,8 +23,10 @@ export const ConfigurationForm = () => {
     name: "",
     ipAddress: "",
   });
-  //   const [isValid, setIsValid] = useState(true);
 
+  const router = useRouter();
+
+  //   generateKeys for publicKey and privateKey
   const generateKeys = () => {
     // Generate the key pair
     const keyPair = nacl.box.keyPair();
@@ -40,20 +45,37 @@ export const ConfigurationForm = () => {
     generateKeys();
   }, []);
 
+  //   this is for input in form
   const handleConfigInputValue = (e) => {
     e.preventDefault();
-    setConfigValue({ ...configValue, [e.target.name]: e.target.value });
+    setConfigValue({
+      ...configValue,
+      [e.target.name]:
+        e.target.type === "number" ? +e.target.value : e.target.value,
+    });
   };
 
-  //   const CheckIpAddress = () => {};
-
+  //   submit form and post
   const submitPostConfigValue = async (e) => {
     e.preventDefault();
 
-    // if (!configValue.name) return
+    if (!configValue.name) return toast.error("Configuration Name");
+    if (
+      !configValue.listenPort ||
+      configValue.listenPort > 65353 ||
+      configValue.listenPort < 0
+    )
+      return toast.error("Listen Port");
+    if (!configValue.ipAddress) return toast.error("Ip Address");
 
-    PostConfigurationInterface(configValue).then((res) => {
+    console.log(configValue);
+
+    await PostConfigurationInterface(configValue).then((res) => {
       console.log(res);
+      if (res.isSuccess) {
+        toast.success("successfull");
+        router.push("/");
+      } else toast.error(res.message);
     });
   };
 
@@ -62,14 +84,6 @@ export const ConfigurationForm = () => {
       onSubmit={submitPostConfigValue}
       className="w-full flex flex-col gap-6 pt-6"
     >
-      <div className="toast toast-end">
-        <div className="alert alert-info">
-          <span>New mail arrived.</span>
-        </div>
-        <div className="alert alert-success">
-          <span>Message sent successfully.</span>
-        </div>
-      </div>
       <ConfigurationFormCard title={"Configuration Name"}>
         <input
           name="name"
@@ -115,22 +129,42 @@ export const ConfigurationForm = () => {
           name="listenPort"
           onChange={handleConfigInputValue}
           placeholder="0-65353"
-          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
+          className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${
+            configValue.listenPort > 65353 || configValue.listenPort < 0
+              ? "border-red-300"
+              : ""
+          }`}
         />
       </ConfigurationFormCard>
       <ConfigurationFormCard title={"IP Address & Range"}>
         <input
           type="text"
           name="ipAddress"
-          onChange={(e) => {
-            handleConfigInputValue(e);
-            // CheckIpAddress(e);
-          }}
+          onChange={handleConfigInputValue}
           placeholder="Ex: 10.0.0.1/24"
           className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
         />
       </ConfigurationFormCard>
+      <ConfigurationFormCard title={"Endpoint"}>
+        <input
+          type="text"
+          name="endPoint"
+          defaultValue={configValue.address}
+          onChange={(e) => {
+            e.preventDefault();
+            setConfigValue({
+              ...configValue,
+              ["endPoint"]: `${e.target.value}`,
+            });
+          }}
+          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
+        />
+      </ConfigurationFormCard>
+
+      {/* this is a gap */}
       <div className="h-[2px] bg-[#3D3D3D] my-4 rounded"></div>
+
+      {/* accordion for optional form */}
       <div className="collapse collapse-arrow rounded border border-[#3D3D3D]">
         <input type="checkbox" />
         <div className="collapse-title text-xl font-medium bg-[#1F1F1F] collapse-close">
@@ -141,24 +175,32 @@ export const ConfigurationForm = () => {
             <ConfigurationFormCard title={"PreUp"}>
               <input
                 type="number"
+                name="preUp"
+                onChange={handleConfigInputValue}
                 className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
               />
             </ConfigurationFormCard>
             <ConfigurationFormCard title={"PreDown"}>
               <input
                 type="number"
+                name="preDown"
+                onChange={handleConfigInputValue}
                 className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
               />
             </ConfigurationFormCard>
             <ConfigurationFormCard title={"PostUp"}>
               <input
                 type="number"
+                name="postUp"
+                onChange={handleConfigInputValue}
                 className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
               />
             </ConfigurationFormCard>
             <ConfigurationFormCard title={"PostDown"}>
               <input
                 type="number"
+                name="postDown"
+                onChange={handleConfigInputValue}
                 className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
               />
             </ConfigurationFormCard>
