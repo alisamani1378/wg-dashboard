@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { InterfaceItem } from "./InterfaceItem";
 import { GetInterface } from "@/api/interface";
-import { GridLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
 
 export const Interfaces = () => {
   const [interfaces, setInterFaces] = useState();
@@ -29,7 +29,7 @@ export const Interfaces = () => {
     <>
       {loading ? (
         <div className="w-full flex justify-center items-center h-[600px]">
-          <GridLoader color="#fff" />
+          <ScaleLoader color="#fff" />
         </div>
       ) : (
         <>

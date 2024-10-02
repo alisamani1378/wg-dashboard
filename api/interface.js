@@ -5,4 +5,9 @@ const GetInterface = async () => {
   return data;
 };
 
-export { GetInterface };
+const PostConfigurationInterface = async (payload) => {
+  const { data } = await client.post(`/Interface`, payload);
+  return data;
+};
+
+export { GetInterface, PostConfigurationInterface };
