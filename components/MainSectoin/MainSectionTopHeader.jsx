@@ -11,7 +11,7 @@ export const MainSectionTopHeader = () => {
       </div>
       <Link
         href={"configuration"}
-        className="w-full md:w-[160px] flex justify-center items-center gap-4 py-3 mt-4 md:m-0 rounded-lg bg-[rgb(255,74,0)] bg-gradient-to-br from-[rgba(255,74,0,1)] to-[rgba(0,157,255,1)] [background:linear-gradient(190deg,rgba(255,74,0,1)_28%,rgba(0,157,255,1)_100%)]"
+        className="w-full md:w-[160px] flex justify-center items-center gap-4 py-3 mt-4 md:m-0 rounded-lg transition-all duration-500 bg-gradient-to-br from-[rgba(255,74,0,1)] via-[rgba(0,157,255,1)] to-[#009dff] bg-size-200 bg-pos-0 hover:bg-pos-100"
       >
         <BsFillPlusCircleFill />
         Configuration

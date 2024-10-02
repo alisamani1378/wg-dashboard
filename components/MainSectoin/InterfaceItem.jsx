@@ -12,10 +12,10 @@ export const InterfaceItem = ({ interfaceDetail }) => {
   const status = false;
 
   return (
-    <div className="w-full my-4 border-2 border-gray-800 rounded hover:rounded-lg hover:border-[rgb(255,74,0)] dark:hover:border-blue-400 overflow-hidden transition-all duration-150">
+    <div className="w-full my-4 border-2 border-[#3D3D3D] rounded hover:rounded-lg hover:border-[rgb(255,74,0)] dark:hover:border-blue-400 overflow-hidden transition-all duration-150">
       <Link
         href={"/"}
-        className="p-4 border-b-2 border-b-gray-800 flex justify-between items-center dark:hover:bg-gray-950 hover:bg-gray-100"
+        className="p-4 border-b-2 border-b-[#3D3D3D] flex justify-between items-center dark:hover:bg-gray-950 hover:bg-gray-100"
       >
         <div className="">
           <span className="w-[6px] h-[6px] mr-2 bg-green-500 rounded-full animate-ping"></span>

@@ -1,6 +1,18 @@
+import localFont from "next/font/local";
 import { Header } from "@/components/Header/Header";
-import "./globals.css";
 import { Sidebar } from "@/components/Sidebar/Sidebar";
+import "./globals.css";
+
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+});
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+});
 
 export const metadata = {
   title: "WG Dashboard",
@@ -9,11 +21,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <Header />
         <div className="w-screen h-[calc(100vh_-_56px)] flex">
           <Sidebar />
-          {children}
+          <div className="w-full flex-1 px-8 py-6 overflow-y-auto">
+            {children}
+          </div>
         </div>
       </body>
     </html>

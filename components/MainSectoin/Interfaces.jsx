@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import { InterfaceItem } from "./InterfaceItem";
 import { GetInterface } from "@/api/interface";
+import { GridLoader } from "react-spinners";
 
 export const Interfaces = () => {
   const [interfaces, setInterFaces] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchInterFace = () => {
-    setLoading(true);
     GetInterface()
       .then((res) => {
         setInterFaces(res.interfaces);
@@ -28,7 +28,9 @@ export const Interfaces = () => {
   return (
     <>
       {loading ? (
-        <div>loading....</div>
+        <div className="w-full flex justify-center items-center h-[600px]">
+          <GridLoader color="#fff" />
+        </div>
       ) : (
         <>
           {interfaces ? (
