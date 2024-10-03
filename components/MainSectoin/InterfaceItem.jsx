@@ -12,7 +12,6 @@ import { SyncLoader } from "react-spinners";
 
 export const InterfaceItem = ({ interfaceDetail }) => {
   const { id, name, peers, privateKey, status } = interfaceDetail;
-  console.log(status);
 
   const [ChangeStatusLoading, setChangeStatusLoading] = useState(false);
 
@@ -32,8 +31,8 @@ export const InterfaceItem = ({ interfaceDetail }) => {
   return (
     <div className="w-full my-4 border-2 border-[#3D3D3D] rounded hover:rounded-lg hover:border-blue-400 overflow-hidden transition-all duration-150">
       <Link
-        href={`configuration/${id}`}
-        className="p-4 border-b-2 border-b-[#3D3D3D] flex justify-between items-center hover:bg-gray-950"
+        href={`configuration/${name}`}
+        className="p-4 border-b-2 border-b-[#3D3D3D] flex justify-between items-center hover:bg-[#141414]"
       >
         <div className="">
           <span className="w-[6px] h-[6px] mr-2 bg-green-500 rounded-full animate-ping"></span>
