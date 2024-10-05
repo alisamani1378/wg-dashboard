@@ -2,7 +2,6 @@ import { InterfaceDetailHeader } from "@/components/Configuration/InterfaceDetai
 
 export default function ConfigDetail({ params }) {
   const { InterfaceId } = params;
-  console.log(InterfaceId);
 
   return (
     <>

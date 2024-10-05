@@ -21,19 +21,10 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
         <div className="w-[132px] flex justify-between items-center px-5 py-2 border border-[#3D3D3D] rounded">
           <div>
             <p>Status</p>
-            <div className="mt-2">
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  // checked={status}
-                  className="sr-only peer"
-                  // onChange={ChangeStatus}
-                />
-                <div
-                  className={`group peer bg-white rounded-full duration-300 w-8 h-4 ring-2 ring-red-500 after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500  after:rounded-full after:absolute after:h-2 after:w-2 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-95 peer-checked:after:translate-x-4`}
-                ></div>
-              </label>
-            </div>
+            <input
+              type="checkbox"
+              className="toggle toggle-sm toggle-error checked:toggle-success mt-2"
+            />
           </div>
           <div>
             <span className="w-3 h-3 bg-green-100 rounded-full flex justify-center items-center">
@@ -72,12 +63,15 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
       {/* this is a gap */}
       <div className="h-[2px] bg-[#3D3D3D] my-8 rounded"></div>
 
-      <Link href={`${interfaceId}/creat`}>
-        <div className="w-full md:w-1/6 flex items-center justify-center gap-2 py-3 text-[#77ABF8] border border-[#063274] rounded bg-[#084298]/40 backdrop-blur hover:bg-[#084298]/60 transition-all duration-100">
+      <div className="w-full md:w-1/6 text-[#77ABF8] border border-[#063274] rounded bg-[#084298]/40 backdrop-blur hover:bg-[#084298]/60 transition-all duration-100">
+        <Link
+          href={`${interfaceId}/creat`}
+          className="h-full flex items-center justify-center gap-2 py-3"
+        >
           <BsPlusLg />
           Peer
-        </div>
-      </Link>
+        </Link>
+      </div>
 
       {/* this is a gap */}
       <div className="h-[2px] bg-[#3D3D3D] my-8 rounded"></div>

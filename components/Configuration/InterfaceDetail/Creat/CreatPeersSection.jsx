@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { CreatPeersSectionAddBulkForm } from "./CreatPeersSectionAddBulkForm";
+import { CreatPeersSectionOptionalForm } from "./CreatPeersSectionOptionalForm";
 
 export const CreatPeersSection = () => {
   const [isCheckBulkAdd, setIsCheckBulkAdd] = useState(true);
@@ -27,7 +28,9 @@ export const CreatPeersSection = () => {
           <CreatPeersSectionAddBulkForm />
         </>
       ) : (
-        <></>
+        <>
+          <CreatPeersSectionOptionalForm />
+        </>
       )}
     </>
   );
