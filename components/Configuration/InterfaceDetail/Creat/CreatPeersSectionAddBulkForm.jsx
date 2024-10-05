@@ -1,3 +1,4 @@
+import Button from "@/components/common/Button";
 import { ConfigurationFormCard } from "../../ConfigurationFormCard";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 
@@ -61,13 +62,10 @@ export const CreatPeersSectionAddBulkForm = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <button
-              //   disabled={isValid}
-              className="w-fit flex justify-center items-center gap-3 px-4 py-2 mt-4 md:m-0 rounded-lg transition-all duration-500 bg-gradient-to-br from-[rgba(255,74,0,1)] via-[rgba(0,157,255,1)] to-[#009dff] bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+            <Button>
               <BsFillPlusCircleFill />
               Add
-            </button>
+            </Button>
           </div>
         </form>
       </ConfigurationFormCard>

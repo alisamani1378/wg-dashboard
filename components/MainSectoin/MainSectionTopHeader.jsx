@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BsBodyText } from "react-icons/bs";
 import { BsFillPlusCircleFill } from "react-icons/bs";
+import Button from "../common/Button";
 
 export const MainSectionTopHeader = () => {
   return (
@@ -9,12 +10,11 @@ export const MainSectionTopHeader = () => {
         <BsBodyText />
         <div>WireGuard Configurations</div>
       </div>
-      <Link
-        href={"configuration"}
-        className="w-full md:w-[160px] flex justify-center items-center gap-4 py-3 mt-4 md:m-0 rounded-lg transition-all duration-500 bg-gradient-to-br from-[rgba(255,74,0,1)] via-[rgba(0,157,255,1)] to-[#009dff] bg-size-200 bg-pos-0 hover:bg-pos-100"
-      >
-        <BsFillPlusCircleFill />
-        Configuration
+      <Link href={"configuration"}>
+        <Button>
+          <BsFillPlusCircleFill />
+          Configuration
+        </Button>
       </Link>
     </div>
   );

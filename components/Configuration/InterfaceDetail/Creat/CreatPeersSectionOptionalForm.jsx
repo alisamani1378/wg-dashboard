@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
+import Button from "@/components/common/Button";
 
 export const CreatPeersSectionOptionalForm = () => {
   const [peerValue, setPeerValue] = useState({ privateKey: "", publicKey: "" });
@@ -97,7 +98,7 @@ export const CreatPeersSectionOptionalForm = () => {
             </div>
             <span className="hidden md:block mx-2">Or</span>
             <div className="w-full md:w-fit flex justify-end mt-4 md:mt-0">
-              <details className="dropdown dropdown-top dropdown-end md:dropdown-bottom">
+              <details className="dropdown dropdown-end ">
                 <summary className="btn btn-sm bg-[#707070] text-white border-none hover:!bg-[#707070]">
                   Pick Available IP
                   <BsChevronDown />
@@ -166,13 +167,10 @@ export const CreatPeersSectionOptionalForm = () => {
         </div>
 
         <div className="flex justify-end mt-4">
-          <button
-            //   disabled={isValid}
-            className="w-fit flex justify-center items-center gap-3 px-4 py-2 mt-4 md:m-0 rounded-lg transition-all duration-500 bg-gradient-to-br from-[rgba(255,74,0,1)] via-[rgba(0,157,255,1)] to-[#009dff] bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <Button>
             <BsFillPlusCircleFill />
             Add
-          </button>
+          </Button>
         </div>
       </form>
     </>

@@ -67,6 +67,7 @@ export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
+            disable={ChangeStatusLoading}
             checked={status === "disabled" ? false : true}
             className={`toggle toggle-sm ${
               status === "disabled" ? "toggle-error" : "toggle-success"
