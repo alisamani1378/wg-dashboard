@@ -52,7 +52,7 @@ export const InterfaceItem = ({ interfaceDetail }) => {
         </div>
         <div className="col-span-1 flex items-center gap-1">
           <span className="w-[6px] h-[6px] mr-2 bg-green-400 rounded-full animate-ping"></span>
-          {peers.length}
+          {peers?.length}
           <span>Peers</span>
         </div>
       </div>
@@ -63,25 +63,13 @@ export const InterfaceItem = ({ interfaceDetail }) => {
             {privateKey}
           </span>
         </div>
-        {ChangeStatusLoading ? (
-          <>
-            <SyncLoader color="#fff" size={8} />
-          </>
-        ) : (
-          <div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={status}
-                className="sr-only peer"
-                onChange={ChangeStatus}
-              />
-              <div
-                className={`group peer bg-white rounded-full duration-300 w-8 h-4 ring-2 ring-red-500 after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500  after:rounded-full after:absolute after:h-2 after:w-2 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-95 peer-checked:after:translate-x-4`}
-              ></div>
-            </label>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            className="toggle toggle-sm toggle-error checked:toggle-success"
+          />
+          <span>ON/OFF</span>
+        </div>
       </div>
     </div>
   );
