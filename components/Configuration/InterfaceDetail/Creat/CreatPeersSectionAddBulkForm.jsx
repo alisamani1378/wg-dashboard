@@ -18,7 +18,7 @@ export const CreatPeersSectionAddBulkForm = () => {
           </div>
 
           {/* this is a gap */}
-          <div className="h-[1px] bg-[#3D3D3D] my-4 rounded"></div>
+          <div className="h-[1px] bg-[primaryLight my-4 rounded"></div>
 
           <div>
             <label className="mt-2 mb-1 block font-bold">
@@ -40,7 +40,7 @@ export const CreatPeersSectionAddBulkForm = () => {
           </div>
 
           {/* this is a gap */}
-          <div className="h-[1px] bg-[#3D3D3D] my-4 rounded"></div>
+          <div className="h-[1px] bg-[primaryLight my-4 rounded"></div>
 
           <div>
             <label className="mt-2 mb-1 block font-bold">MTU</label>

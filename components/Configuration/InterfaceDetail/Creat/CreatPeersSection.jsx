@@ -18,7 +18,7 @@ export const CreatPeersSection = () => {
           />
           <span className="label-text font-semibold text-white">Bulk Add</span>
         </label>
-        <p className="text-sm text-[#CCCCCC]">
+        <p className="text-sm text-secondary">
           By adding peers by bulk, each peer&apos;s name will be auto generated,
           and Allowed IP will be assign to the next available IP.
         </p>

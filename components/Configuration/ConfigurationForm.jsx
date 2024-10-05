@@ -164,16 +164,16 @@ export const ConfigurationForm = () => {
       </ConfigurationFormCard>
 
       {/* this is a gap */}
-      <div className="h-[2px] bg-[#3D3D3D] my-4 rounded"></div>
+      <div className="h-[2px] bg-primaryLight my-4 rounded"></div>
 
       {/* accordion for optional form */}
-      <div className="collapse collapse-arrow rounded border border-[#3D3D3D]">
+      <div className="collapse collapse-arrow rounded border border-primaryLight">
         <input type="checkbox" />
         <div className="collapse-title text-xl font-medium bg-[#1F1F1F] collapse-close">
           Optional Settings
         </div>
         <div className="collapse-content">
-          <div className="pt-4 flex flex-col gap-4">
+          <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             <ConfigurationFormCard title={"PreUp"}>
               <input
                 type="number"

@@ -9,6 +9,7 @@ export const Interfaces = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchInterFace = () => {
+    setLoading(true);
     GetInterface()
       .then((res) => {
         if (res.isSuccess) {
@@ -39,11 +40,17 @@ export const Interfaces = () => {
           {interfaces ? (
             <>
               {interfaces.map((item) => {
-                return <InterfaceItem key={item.id} interfaceDetail={item} />;
+                return (
+                  <InterfaceItem
+                    key={item.id}
+                    interfaceDetail={item}
+                    reFetch={fetchInterFace}
+                  />
+                );
               })}
             </>
           ) : (
-            <div className="w-full h-[480px] flex items-center justify-center border border-gray-500 rounded mt-4 text-2xl">
+            <div className="w-full h-[480px] flex items-center justify-center border border-primaryLight rounded mt-4 text-2xl">
               Nothing Find!
             </div>
           )}

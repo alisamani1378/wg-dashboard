@@ -18,7 +18,7 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
           </p>
           <p className="text-[32px] font-bold">{interfaceId}</p>
         </div>
-        <div className="w-[132px] flex justify-between items-center px-5 py-2 border border-[#3D3D3D] rounded">
+        <div className="w-[132px] flex justify-between items-center px-5 py-2 border border-primaryLight rounded">
           <div>
             <p>Status</p>
             <input
@@ -61,7 +61,7 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
         />
       </div>
       {/* this is a gap */}
-      <div className="h-[2px] bg-[#3D3D3D] my-8 rounded"></div>
+      <div className="h-[2px] bg-primaryLight my-8 rounded"></div>
 
       <div className="w-full md:w-1/6 text-[#77ABF8] border border-[#063274] rounded bg-[#084298]/40 backdrop-blur hover:bg-[#084298]/60 transition-all duration-100">
         <Link
@@ -74,7 +74,7 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
       </div>
 
       {/* this is a gap */}
-      <div className="h-[2px] bg-[#3D3D3D] my-8 rounded"></div>
+      <div className="h-[2px] bg-primaryLight my-8 rounded"></div>
     </>
   );
 };

@@ -6,7 +6,7 @@ export const InterfaceDetailHeaderCard = ({
   showGb,
 }) => {
   return (
-    <div className="col-span-1 w-full p-4 flex justify-between border border-[#3D3D3D] rounded">
+    <div className="col-span-1 w-full p-4 flex justify-between border border-primaryLight rounded">
       <div>
         <p className="text-[#B8B8B8]">{title}</p>
         <p

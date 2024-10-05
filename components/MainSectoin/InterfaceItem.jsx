@@ -9,29 +9,30 @@ import {
   BsArrowUp,
 } from "react-icons/bs";
 
-export const InterfaceItem = ({ interfaceDetail }) => {
-  const { id, name, peers, privateKey, status } = interfaceDetail;
+export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
+  const { name, peers, privateKey, status } = interfaceDetail;
+  console.log(interfaceDetail);
 
   const [ChangeStatusLoading, setChangeStatusLoading] = useState(false);
 
   const ChangeStatus = async () => {
     setChangeStatusLoading(true);
     const ChangeStatusValue = {
-      status: interfaceDetail.status ? 0 : 1,
+      status: status === "disabled" ? 0 : 1,
       name: interfaceDetail.name,
     };
     await UpdateConfigurationStatus(ChangeStatusValue)
-      .then((res) => {
-        console.log(res);
+      .then(async (res) => {
+        await reFetch();
       })
       .finally(() => setChangeStatusLoading(false));
   };
 
   return (
-    <div className="w-full my-4 border-2 border-[#3D3D3D] rounded hover:rounded-lg hover:border-blue-400 overflow-hidden transition-all duration-150">
+    <div className="w-full my-4 border-2 border-primaryLight rounded hover:rounded-lg hover:border-blue-400 overflow-hidden transition-all duration-150">
       <Link
         href={`configuration/${name}`}
-        className="p-4 border-b-2 border-b-[#3D3D3D] flex justify-between items-center hover:bg-[#141414]"
+        className="p-4 border-b-2 border-b-primaryLight flex justify-between items-center hover:bg-[#141414]"
       >
         <div className="">
           <span className="w-[6px] h-[6px] mr-2 bg-green-500 rounded-full animate-ping"></span>
@@ -62,13 +63,17 @@ export const InterfaceItem = ({ interfaceDetail }) => {
             {privateKey}
           </span>
         </div>
+
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
-            className="toggle toggle-sm toggle-error checked:toggle-success"
+            checked={status === "disabled" ? false : true}
+            className={`toggle toggle-sm ${
+              status === "disabled" ? "toggle-error" : "toggle-success"
+            }`}
             onChange={ChangeStatus}
           />
-          <span>{status ? "OFF" : "ON"}</span>
+          <span>{status === "disabled" ? "OFF" : "ON"}</span>
         </div>
       </div>
     </div>

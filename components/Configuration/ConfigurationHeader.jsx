@@ -5,7 +5,7 @@ export const ConfigurationHeader = () => {
   return (
     <Link
       href={"/"}
-      className="w-fit flex items-center gap-4 justify-start text-[28px] font-bold hover:text-[#CCCCCC]"
+      className="w-fit flex items-center gap-4 justify-start text-[28px] font-bold hover:text-secondary"
     >
       <BsChevronLeft />
       New Interface

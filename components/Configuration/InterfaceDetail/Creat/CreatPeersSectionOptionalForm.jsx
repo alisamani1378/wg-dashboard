@@ -137,7 +137,7 @@ export const CreatPeersSectionOptionalForm = () => {
         </div>
 
         {/* this is a gap */}
-        <div className="h-[1px] bg-[#3D3D3D] my-4 rounded"></div>
+        <div className="h-[1px] bg-primaryLight my-4 rounded"></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="col-span-1">

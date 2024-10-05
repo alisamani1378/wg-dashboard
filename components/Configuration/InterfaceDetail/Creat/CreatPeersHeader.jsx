@@ -8,7 +8,7 @@ export const CreatPeersHeader = () => {
   return (
     <div
       onClick={() => router.back()}
-      className="w-fit flex items-center gap-4 justify-start text-[28px] font-bold cursor-pointer hover:text-[#CCCCCC]"
+      className="w-fit flex items-center gap-4 justify-start text-[28px] font-bold cursor-pointer hover:text-secondary"
     >
       <BsChevronLeft />
       Add Peers
