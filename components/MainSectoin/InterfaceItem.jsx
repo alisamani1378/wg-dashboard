@@ -8,7 +8,6 @@ import {
   BsArrowDown,
   BsArrowUp,
 } from "react-icons/bs";
-import { SyncLoader } from "react-spinners";
 
 export const InterfaceItem = ({ interfaceDetail }) => {
   const { id, name, peers, privateKey, status } = interfaceDetail;
@@ -18,8 +17,8 @@ export const InterfaceItem = ({ interfaceDetail }) => {
   const ChangeStatus = async () => {
     setChangeStatusLoading(true);
     const ChangeStatusValue = {
-      status: !interfaceDetail.status,
-      id: interfaceDetail.id,
+      status: interfaceDetail.status ? 0 : 1,
+      name: interfaceDetail.name,
     };
     await UpdateConfigurationStatus(ChangeStatusValue)
       .then((res) => {
@@ -67,8 +66,9 @@ export const InterfaceItem = ({ interfaceDetail }) => {
           <input
             type="checkbox"
             className="toggle toggle-sm toggle-error checked:toggle-success"
+            onChange={ChangeStatus}
           />
-          <span>ON/OFF</span>
+          <span>{status ? "OFF" : "ON"}</span>
         </div>
       </div>
     </div>

@@ -11,7 +11,10 @@ const PostConfigurationInterface = async (payload) => {
 };
 
 const UpdateConfigurationStatus = async (payload) => {
-  const { data } = await client.put(`/Interface`, payload);
+  const { data } = await client.put(
+    `/Interface?name=${payload.name}&status=${payload.status}`,
+    payload
+  );
   return data;
 };
 
