@@ -11,7 +11,6 @@ import {
 
 export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
   const { name, peers, privateKey, status } = interfaceDetail;
-  console.log(interfaceDetail);
 
   const [ChangeStatusLoading, setChangeStatusLoading] = useState(false);
 

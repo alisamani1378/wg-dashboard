@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { InterfaceDetailHeaderCard } from "./InterfaceDetailHeaderCard";
 import {
@@ -7,8 +8,16 @@ import {
   BsArrowDown,
   BsPlusLg,
 } from "react-icons/bs";
+import { useEffect, useContext } from "react";
+import InterfaceNameContext from "@/context/InterfaceNameContext";
 
 export const InterfaceDetailHeader = ({ interfaceId }) => {
+  const { setInterfaceName } = useContext(InterfaceNameContext);
+
+  useEffect(() => {
+    setInterfaceName(interfaceId);
+  }, []);
+
   return (
     <>
       <div className="w-full flex justify-between items-center">
