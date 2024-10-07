@@ -8,6 +8,7 @@ import { BsSearch } from "react-icons/bs";
 import { FaSortAmountDownAlt, FaSortAmountUp } from "react-icons/fa";
 
 export const InterfaceDetailPeers = () => {
+
   const [peers, setPeers] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState({
@@ -36,10 +37,11 @@ export const InterfaceDetailPeers = () => {
       });
   };
 
+
+
   useEffect(() => {
-    const searchQuery = `?Take=${filter.Take}&Skip=${
-      filter.Skip
-    }&InterfaceName=${location.pathname.split("/")[2]}&name=${filter.name}`;
+    const searchQuery = `?Take=${filter.Take}&Skip=${filter.Skip
+      }&InterfaceName=${location.pathname.split("/")[2]}&name=${filter.name}`;
 
     fetchPeers(searchQuery);
   }, [currentPage, filter.Skip, filter.Take, filter.name]);
@@ -81,7 +83,7 @@ export const InterfaceDetailPeers = () => {
       });
     }
   };
-  console.log(filter);
+
 
   return (
     <div className="w-full">
@@ -147,11 +149,10 @@ export const InterfaceDetailPeers = () => {
                       <button
                         key={pageNumber}
                         onClick={() => handlePageChange(pageNumber)}
-                        className={`join-item btn bg-primary text-secondary hover:bg-primaryLight ${
-                          pageNumber === currentPage
-                            ? "btn-active bg-secondary !text-primary hover:bg-secondary"
-                            : ""
-                        }`}
+                        className={`join-item btn bg-primary text-secondary hover:bg-primaryLight ${pageNumber === currentPage
+                          ? "btn-active bg-secondary !text-primary hover:bg-secondary"
+                          : ""
+                          }`}
                       >
                         {pageNumber + 1}
                       </button>

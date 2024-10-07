@@ -5,6 +5,13 @@ const GetInterface = async () => {
   return data;
 };
 
+
+const GetInterfaceByName = async (name) => {
+  const { data } = await client.get(`/Interface/${name}`);
+  return data;
+};
+
+
 const PostConfigurationInterface = async (payload) => {
   const { data } = await client.post(`/Interface`, payload);
   return data;
@@ -18,4 +25,4 @@ const UpdateConfigurationStatus = async (payload) => {
   return data;
 };
 
-export { GetInterface, PostConfigurationInterface, UpdateConfigurationStatus };
+export { GetInterface, GetInterfaceByName, PostConfigurationInterface, UpdateConfigurationStatus };

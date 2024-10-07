@@ -1,13 +1,14 @@
 "use client";
 import { PostConfigurationInterface } from "@/api/interface";
 import { ConfigurationFormCard } from "@/components/Configuration/ConfigurationFormCard";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BsFillSaveFill, BsArrowRepeat } from "react-icons/bs";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import Button from "../common/Button";
+import { BarLoader } from "react-spinners";
 
 export const ConfigurationForm = () => {
   const [configValue, setConfigValue] = useState({
@@ -24,8 +25,12 @@ export const ConfigurationForm = () => {
     name: "",
     ipAddress: "",
   });
+  const [submitLoading, setSubmitLoading] = useState(false)
 
   const router = useRouter();
+  const pathname = usePathname();
+  console.log(pathname);
+
 
   //   generateKeys for publicKey and privateKey
   const generateKeys = () => {
@@ -58,6 +63,7 @@ export const ConfigurationForm = () => {
   //   submit form and post
   const submitPostConfigValue = async (e) => {
     e.preventDefault();
+    setSubmitLoading(true)
 
     if (!configValue.name) return toast.error("Configuration Name");
     if (
@@ -81,7 +87,10 @@ export const ConfigurationForm = () => {
       .catch((er) => {
         console.log(er);
         toast.error("failed");
-      });
+      })
+      .finally(() => {
+        setSubmitLoading(false)
+      })
   };
 
   return (
@@ -132,11 +141,10 @@ export const ConfigurationForm = () => {
           name="listenPort"
           onChange={handleConfigInputValue}
           placeholder="0-65353"
-          className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${
-            configValue.listenPort > 65353 || configValue.listenPort < 0
-              ? "border-red-300"
-              : ""
-          }`}
+          className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${configValue.listenPort > 65353 || configValue.listenPort < 0
+            ? "border-red-300"
+            : ""
+            }`}
         />
       </ConfigurationFormCard>
       <ConfigurationFormCard title={"IP Address & Range"}>
@@ -212,8 +220,12 @@ export const ConfigurationForm = () => {
       </div>
       <div className="flex justify-end">
         <Button>
-          Save Interface
-          <BsFillSaveFill />
+          {submitLoading ? <>
+            <BarLoader />
+          </> : <>
+            Save Interface
+            <BsFillSaveFill /></>}
+
         </Button>
       </div>
     </form>

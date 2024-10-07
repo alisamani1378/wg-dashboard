@@ -10,4 +10,9 @@ const PostPeerInterface = async (interfacename, payload) => {
   return data;
 };
 
-export { GetPeer, PostPeerInterface };
+const GetPeerConfig = async (name) => {
+  const { data } = await client.get(`/Peer/GetPeerConfig/${name}`);
+  return data;
+};
+
+export { GetPeer, GetPeerConfig, PostPeerInterface };
