@@ -1,22 +1,27 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GetPeer } from "@/api/peer";
 import toast from "react-hot-toast";
 import { InterfaceDetailPeersCard } from "@/components/Configuration/InterfaceDetail/InterfaceDetailPeersCard";
 import { ScaleLoader } from "react-spinners";
+import { BsSearch } from "react-icons/bs";
+import { FaSortAmountDownAlt, FaSortAmountUp } from "react-icons/fa";
 
 export const InterfaceDetailPeers = () => {
   const [peers, setPeers] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState({
-    Take: 10,
+    Take: 20,
     Skip: 0,
+    name: "",
   });
   const [peerLoading, setPeerLoading] = useState(true);
 
+  const searchNameRef = useRef();
+
   const fetchPeers = async (searchQuery) => {
-    console.log(searchQuery);
     setPeerLoading(true);
+
     await GetPeer(searchQuery)
       .then((res) => {
         console.log(res);
@@ -34,10 +39,10 @@ export const InterfaceDetailPeers = () => {
   useEffect(() => {
     const searchQuery = `?Take=${filter.Take}&Skip=${
       filter.Skip
-    }&InterfaceName=${location.pathname.split("/")[2]}`;
+    }&InterfaceName=${location.pathname.split("/")[2]}&name=${filter.name}`;
 
     fetchPeers(searchQuery);
-  }, [currentPage, filter.Skip, filter.Take]);
+  }, [currentPage, filter.Skip, filter.Take, filter.name]);
 
   const paginationNumber = Math.floor(peers?.countPeer / 10);
   const paginationArray = Array.from(
@@ -62,6 +67,22 @@ export const InterfaceDetailPeers = () => {
     });
   };
 
+  const handleSearchPeer = (e) => {
+    e.preventDefault();
+    const searchValue = searchNameRef.current.value;
+
+    if (searchValue) {
+      setFilter({ ...filter, name: searchValue });
+    } else {
+      setFilter({
+        Take: 20,
+        Skip: 0,
+        name: "",
+      });
+    }
+  };
+  console.log(filter);
+
   return (
     <div className="w-full">
       {peerLoading ? (
@@ -70,9 +91,34 @@ export const InterfaceDetailPeers = () => {
         </div>
       ) : (
         <>
-          <div className="w-full flex justify-between p-4 bg-primaryLight shadow mb-4 border border-primaryLight rounded-md">
-            <span className="col-span-3">PeerName</span>
-            <span className="col-span-1 text-center">Id</span>
+          <div className="w-full flex justify-between items-center gap-4  mb-4">
+            <form onSubmit={handleSearchPeer} className="relative flex-1">
+              <input
+                name="searchparam"
+                ref={searchNameRef}
+                type="text"
+                defaultValue={filter.name}
+                placeholder="Search"
+                className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none "
+              />
+              <button className="btn btn-square btn-outline btn-sm absolute right-2 top-[5px] bg-transparent hover:bg-primaryLight border !border-primaryLight text-primaryLight">
+                <BsSearch />
+              </button>
+            </form>
+            <div className="flex items-center gap-2">
+              <span
+                onClick={() => setFilter({ ...filter, Take: 20 })}
+                className="w-[42px] h-[42px] flex justify-center items-center bg-primaryLight border border-secondary rounded-lg hover:bg-primary cursor-pointer transition-all duration-75"
+              >
+                <FaSortAmountDownAlt />
+              </span>
+              <span
+                onClick={() => setFilter({ ...filter, Take: 40 })}
+                className="w-[42px] h-[42px] flex justify-center items-center bg-primaryLight border border-secondary rounded-lg hover:bg-primary cursor-pointer transition-all duration-75"
+              >
+                <FaSortAmountUp />
+              </span>
+            </div>
           </div>
           <div className="grid grid-cols-1 gap-3">
             {peers?.peers.map((peer) => {
