@@ -9,12 +9,17 @@ export const MainSectionTopHeader = () => {
         <BsBodyText />
         <div>WireGuard Configurations</div>
       </div>
-      <Link href={"/configuration"}>
+      <div className="flex justify-end">
         <Button>
-          <BsFillPlusCircleFill />
-          Configuration
+          <Link
+            href={"/configuration"}
+            className="flex items-center justify-center gap-3"
+          >
+            <BsFillPlusCircleFill />
+            Configuration
+          </Link>
         </Button>
-      </Link>
+      </div>
     </div>
   );
 };

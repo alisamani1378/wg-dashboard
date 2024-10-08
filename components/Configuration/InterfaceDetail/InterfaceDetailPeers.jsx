@@ -85,7 +85,6 @@ export const InterfaceDetailPeers = () => {
     }
   };
 
-
   return (
     <div className="w-full">
       {peerLoading ? (
@@ -139,7 +138,7 @@ export const InterfaceDetailPeers = () => {
                 <button
                   disabled={currentPage === 0}
                   onClick={() => handlePageChange(currentPage - 1)}
-                  className="join-item btn bg-primary text-secondary hover:bg-primaryLight disabled:bg-primaryLight"
+                  className="join-item btn bg-primary text-secondary hover:bg-primaryLight disabled:bg-primaryLight disabled:text-secondary"
                 >
                   «
                 </button>
@@ -163,7 +162,7 @@ export const InterfaceDetailPeers = () => {
                 <button
                   disabled={currentPage === paginationNumber}
                   onClick={() => handlePageChange(currentPage + 1)}
-                  className="join-item btn bg-primary text-secondary hover:bg-primaryLight disabled:bg-primaryLight"
+                  className="join-item btn bg-primary text-secondary hover:bg-primaryLight disabled:bg-primaryLight disabled:text-secondary"
                 >
                   »
                 </button>

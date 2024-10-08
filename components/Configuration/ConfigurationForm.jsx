@@ -1,14 +1,13 @@
 "use client";
 import { PostConfigurationInterface } from "@/api/interface";
 import { ConfigurationFormCard } from "@/components/Configuration/ConfigurationFormCard";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { BsFillSaveFill, BsArrowRepeat } from "react-icons/bs";
+import { BsArrowRepeat, BsFillSaveFill } from "react-icons/bs";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import Button from "../common/Button";
-import { BarLoader } from "react-spinners";
 
 export const ConfigurationForm = () => {
   const [configValue, setConfigValue] = useState({
@@ -25,15 +24,12 @@ export const ConfigurationForm = () => {
     name: "",
     ipAddress: "",
   });
-  const [submitLoading, setSubmitLoading] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const router = useRouter();
-  const pathname = usePathname();
-  console.log(pathname);
-
 
   //   generateKeys for publicKey and privateKey
-  const generateKeys = () => {
+  const generateKeys = useCallback(() => {
     // Generate the key pair
     const keyPair = nacl.box.keyPair();
 
@@ -45,7 +41,7 @@ export const ConfigurationForm = () => {
       ["privateKey"]: privateKey,
       ["publicKey"]: publicKey,
     });
-  };
+  }, []);
 
   useEffect(() => {
     generateKeys();
@@ -63,6 +59,7 @@ export const ConfigurationForm = () => {
   //   submit form and post
   const submitPostConfigValue = async (e) => {
     e.preventDefault();
+    setSubmitLoading(true);
 
     if (!configValue.name) return toast.error("Configuration Name");
     if (
@@ -72,8 +69,6 @@ export const ConfigurationForm = () => {
     )
       return toast.error("Listen Port");
     if (!configValue.ipAddress) return toast.error("Ip Address");
-
-    console.log(configValue);
 
     await PostConfigurationInterface(configValue)
       .then((res) => {
@@ -88,8 +83,8 @@ export const ConfigurationForm = () => {
         toast.error("failed");
       })
       .finally(() => {
-        setSubmitLoading(false)
-      })
+        setSubmitLoading(false);
+      });
   };
 
   return (
@@ -219,13 +214,15 @@ export const ConfigurationForm = () => {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button>
-          {submitLoading ? <>
-            <BarLoader />
-          </> : <>
-            Save Interface
-            <BsFillSaveFill /></>}
-
+        <Button disabled={submitLoading}>
+          Save Interface
+          {submitLoading ? (
+            <span>...</span>
+          ) : (
+            <>
+              <BsFillSaveFill />
+            </>
+          )}
         </Button>
       </div>
     </form>
