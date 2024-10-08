@@ -8,12 +8,29 @@ import {
   BsEthernet,
   BsPlusLg,
 } from "react-icons/bs";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import InterfaceNameContext from "@/context/InterfaceNameContext";
+import { GetInterfaceByName } from "@/api/interface";
+import toast from "react-hot-toast";
 
 export const InterfaceDetailHeader = ({ interfaceId }) => {
+  const [interfaceData, setInterfaceData] = useState();
   const { setInterfaceName } = useContext(InterfaceNameContext);
+
+
+  // useEffect(() => {
+  //   GetInterfaceByName(interfaceId).then(res => {
+  //     if (res.isSuccess) {
+  //       setInterfaceData(res.data)
+  //     } else {
+  //       toast.error(res.message)
+  //     }
+  //   })
+  // }, []);
+
+  // console.log(interfaceData);
+
 
   useEffect(() => {
     setInterfaceName(interfaceId);

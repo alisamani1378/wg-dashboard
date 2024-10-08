@@ -27,6 +27,7 @@ export const InterfaceDetailPeers = () => {
 
     await GetPeer(searchQuery)
       .then((res) => {
+        console.log(res);
         setPeers(res.data);
       })
       .catch((er) => {
@@ -83,6 +84,7 @@ export const InterfaceDetailPeers = () => {
       });
     }
   };
+
 
   return (
     <div className="w-full">

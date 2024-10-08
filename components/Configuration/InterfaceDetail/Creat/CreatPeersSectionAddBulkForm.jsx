@@ -16,6 +16,11 @@ export const CreatPeersSectionAddBulkForm = () => {
     endPoint: "",
     bulk: true,
     count: 0,
+    count: 0,
+    dns: "8.8.8.8,4.2.2.4",
+    mtu: 1420,
+    persistentKeepalive: 21,
+    endpointAllowedIPs: "0.0.0.0/0"
   });
 
   const router = useRouter();
@@ -23,7 +28,7 @@ export const CreatPeersSectionAddBulkForm = () => {
 
   const handleInputBulkValue = (e) => {
     e.preventDefault();
-    setBulkValue({ ...bulkValue, [e.target.name]: +e.target.value });
+    setBulkValue({ ...bulkValue, [e.target.name]: +e.target.value ? e.target.value : +e.target.value });
   };
 
   const submitAddBulkForm = async (e) => {
@@ -54,11 +59,10 @@ export const CreatPeersSectionAddBulkForm = () => {
               name="count"
               onChange={handleInputBulkValue}
               placeholder="How many peers you want to add?"
-              className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${
-                bulkValue.count >= 254 || bulkValue.count < 0
-                  ? "border-red-500"
-                  : ""
-              }`}
+              className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${bulkValue.count >= 254 || bulkValue.count < 0
+                ? "border-red-500"
+                : ""
+                }`}
             />
             <p className="text-xs mt-1">You can add up to 244 peers</p>
           </div>
@@ -72,7 +76,9 @@ export const CreatPeersSectionAddBulkForm = () => {
             </label>
             <input
               type="text"
-              defaultValue={"0.0.0.0/0"}
+              name="endpointAllowedIPs"
+              defaultValue={bulkValue.endpointAllowedIPs}
+              onChange={handleInputBulkValue}
               className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
             />
           </div>
@@ -80,7 +86,9 @@ export const CreatPeersSectionAddBulkForm = () => {
             <label className="mt-2 mb-1 block font-bold">DNS</label>
             <input
               type="text"
-              defaultValue={"1.1.1.1"}
+              name="dns"
+              defaultValue={bulkValue.dns}
+              onChange={handleInputBulkValue}
               className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
             />
           </div>
@@ -93,7 +101,9 @@ export const CreatPeersSectionAddBulkForm = () => {
               <label className="mt-2 mb-1 block font-bold">MTU</label>
               <input
                 type="number"
-                defaultValue={1420}
+                name="mtu"
+                defaultValue={bulkValue.mtu}
+                onChange={handleInputBulkValue}
                 className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
               />
             </div>
@@ -103,7 +113,9 @@ export const CreatPeersSectionAddBulkForm = () => {
               </label>
               <input
                 type="number"
-                defaultValue={21}
+                name="persistentKeepalive"
+                defaultValue={bulkValue.persistentKeepalive}
+                onChange={handleInputBulkValue}
                 className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
               />
             </div>
