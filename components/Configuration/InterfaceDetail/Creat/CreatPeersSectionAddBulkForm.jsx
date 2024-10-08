@@ -5,7 +5,7 @@ import { BsFillPlusCircleFill } from "react-icons/bs";
 import { useState } from "react";
 import { PostPeerInterface } from "@/api/peer";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export const CreatPeersSectionAddBulkForm = () => {
   const [bulkValue, setBulkValue] = useState({
@@ -19,6 +19,7 @@ export const CreatPeersSectionAddBulkForm = () => {
   });
 
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleInputBulkValue = (e) => {
     e.preventDefault();
@@ -30,10 +31,11 @@ export const CreatPeersSectionAddBulkForm = () => {
     if (bulkValue.count <= 0 || bulkValue.count >= 254)
       return toast.error("Bulk Count");
 
-    await PostPeerInterface(location.pathname.split("/")[2], {
+    await PostPeerInterface(pathname.split("/")[2], {
       ...bulkValue,
     }).then((res) => {
-      if (res.isSuccess) {
+      const { isSuccess } = res;
+      if (isSuccess) {
         toast.success(res.message);
         router.back();
       } else {

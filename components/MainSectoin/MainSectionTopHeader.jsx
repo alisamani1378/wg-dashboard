@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { BsBodyText } from "react-icons/bs";
-import { BsFillPlusCircleFill } from "react-icons/bs";
+import { BsBodyText, BsFillPlusCircleFill } from "react-icons/bs";
 import Button from "../common/Button";
 
 export const MainSectionTopHeader = () => {
@@ -10,7 +9,7 @@ export const MainSectionTopHeader = () => {
         <BsBodyText />
         <div>WireGuard Configurations</div>
       </div>
-      <Link href={"configuration"}>
+      <Link href={"/configuration"}>
         <Button>
           <BsFillPlusCircleFill />
           Configuration

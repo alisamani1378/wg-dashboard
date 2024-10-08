@@ -12,10 +12,10 @@ export const Interfaces = () => {
     setLoading(true);
     GetInterface()
       .then((res) => {
-        if (res.isSuccess) {
-          setInterFaces(res.data);
+        const { isSuccess, data } = res;
+        if (isSuccess) {
+          setInterFaces(data);
         }
-        console.log(res);
       })
       .catch((er) => {
         console.log(er);

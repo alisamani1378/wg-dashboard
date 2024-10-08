@@ -6,6 +6,7 @@ import { InterfaceDetailPeersCard } from "@/components/Configuration/InterfaceDe
 import { ScaleLoader } from "react-spinners";
 import { BsSearch } from "react-icons/bs";
 import { FaSortAmountDownAlt, FaSortAmountUp } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 export const InterfaceDetailPeers = () => {
   const [peers, setPeers] = useState();
@@ -19,12 +20,13 @@ export const InterfaceDetailPeers = () => {
 
   const searchNameRef = useRef();
 
+  const pathname = usePathname();
+
   const fetchPeers = async (searchQuery) => {
     setPeerLoading(true);
 
     await GetPeer(searchQuery)
       .then((res) => {
-        console.log(res);
         setPeers(res.data);
       })
       .catch((er) => {
@@ -39,7 +41,7 @@ export const InterfaceDetailPeers = () => {
   useEffect(() => {
     const searchQuery = `?Take=${filter.Take}&Skip=${
       filter.Skip
-    }&InterfaceName=${location.pathname.split("/")[2]}&name=${filter.name}`;
+    }&InterfaceName=${pathname.split("/")[2]}&name=${filter.name}`;
 
     fetchPeers(searchQuery);
   }, [currentPage, filter.Skip, filter.Take, filter.name]);
@@ -63,7 +65,7 @@ export const InterfaceDetailPeers = () => {
     setCurrentPage(newPage);
     setFilter({
       ...filter,
-      Skip: filter.Take * newPage, // به‌روزرسانی Skip با توجه به صفحه جدید
+      Skip: filter.Take * newPage,
     });
   };
 
@@ -81,7 +83,6 @@ export const InterfaceDetailPeers = () => {
       });
     }
   };
-  console.log(filter);
 
   return (
     <div className="w-full">
@@ -99,9 +100,9 @@ export const InterfaceDetailPeers = () => {
                 type="text"
                 defaultValue={filter.name}
                 placeholder="Search"
-                className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none "
+                className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke pl-2 pr-12 py-2 outline-none "
               />
-              <button className="btn btn-square btn-outline btn-sm absolute right-2 top-[5px] bg-transparent hover:bg-primaryLight border !border-primaryLight text-primaryLight">
+              <button className="btn btn-square btn-outline btn-sm absolute right-2 top-[5px] bg-transparent hover:bg-primaryLight hover:text-secondary border !border-primaryLight text-primaryLight">
                 <BsSearch />
               </button>
             </form>

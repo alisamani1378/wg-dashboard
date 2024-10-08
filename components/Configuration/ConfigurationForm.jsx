@@ -2,9 +2,9 @@
 import { PostConfigurationInterface } from "@/api/interface";
 import { ConfigurationFormCard } from "@/components/Configuration/ConfigurationFormCard";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { BsFillSaveFill, BsArrowRepeat } from "react-icons/bs";
+import { BsArrowRepeat, BsFillSaveFill } from "react-icons/bs";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import Button from "../common/Button";
@@ -28,10 +28,9 @@ export const ConfigurationForm = () => {
   const router = useRouter();
 
   //   generateKeys for publicKey and privateKey
-  const generateKeys = () => {
+  const generateKeys = useCallback(() => {
     // Generate the key pair
     const keyPair = nacl.box.keyPair();
-
     // Convert keys to Base64 for easy display
     const publicKey = naclUtil.encodeBase64(keyPair.publicKey);
     const privateKey = naclUtil.encodeBase64(keyPair.secretKey);
@@ -40,11 +39,11 @@ export const ConfigurationForm = () => {
       ["privateKey"]: privateKey,
       ["publicKey"]: publicKey,
     });
-  };
+  }, []);
 
   useEffect(() => {
     generateKeys();
-  }, []);
+  }, [generateKeys]);
 
   //   this is for input in form
   const handleConfigInputValue = (e) => {
@@ -68,15 +67,13 @@ export const ConfigurationForm = () => {
       return toast.error("Listen Port");
     if (!configValue.ipAddress) return toast.error("Ip Address");
 
-    console.log(configValue);
-
     await PostConfigurationInterface(configValue)
       .then((res) => {
-        console.log(res);
-        if (res.isSuccess) {
-          toast.success("successfull");
+        const { isSuccess, message } = res;
+        if (isSuccess) {
+          toast.success(message);
           router.push("/");
-        } else toast.error(res.message);
+        } else toast.error(message);
       })
       .catch((er) => {
         console.log(er);
