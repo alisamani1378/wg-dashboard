@@ -3,7 +3,6 @@ import Button from "@/components/common/Button";
 import { ConfigurationFormCard } from "../../ConfigurationFormCard";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { useState } from "react";
-import { PostPeerInterface } from "@/api/peer";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -22,6 +21,8 @@ export const CreatPeersSectionAddBulkForm = () => {
     endpointAllowedIPs: "0.0.0.0/0",
   });
 
+  const [submitLoading, setSubmitLoading] = useState(false);
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -33,22 +34,36 @@ export const CreatPeersSectionAddBulkForm = () => {
     });
   };
 
+  // validation for IpAddress
+  const validIpAddressRegex = /^(\d{1,3}\.){3}\d{1,3}\/\d{1,3}$/;
+
   const submitAddBulkForm = async (e) => {
     e.preventDefault();
-    if (bulkValue.count <= 0 || bulkValue.count >= 254)
-      return toast.error("Bulk Count");
+    const { count, dns, mtu, persistentKeepalive, endpointAllowedIPs } =
+      bulkValue;
+    if (count <= 0 || count >= 254) return toast.error("Bulk Count");
+    if (!dns) return toast.error("Bulk Dns");
+    if (!mtu) return toast.error("Bulk MTU");
+    if (!persistentKeepalive) return toast.error("Persistent Keepalive");
+    if (!endpointAllowedIPs || !validIpAddressRegex.test(endpointAllowedIPs))
+      return toast.error("Endpoint Allowed IPs");
 
+    setSubmitLoading(true);
     await PostPeerInterface(pathname.split("/")[2], {
       ...bulkValue,
-    }).then((res) => {
-      const { isSuccess } = res;
-      if (isSuccess) {
-        toast.success(res.message);
-        router.back();
-      } else {
-        toast.error(res.message);
-      }
-    });
+    })
+      .then((res) => {
+        const { isSuccess } = res;
+        if (isSuccess) {
+          toast.success(res.message);
+          router.back();
+        } else {
+          toast.error(res.message);
+        }
+      })
+      .finally(() => {
+        setSubmitLoading(false);
+      });
   };
 
   return (
@@ -124,7 +139,7 @@ export const CreatPeersSectionAddBulkForm = () => {
             </div>
           </div>
           <div className="flex justify-end mt-4">
-            <Button>
+            <Button disabled={submitLoading}>
               <BsFillPlusCircleFill />
               Add
             </Button>

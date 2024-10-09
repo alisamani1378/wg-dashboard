@@ -56,10 +56,12 @@ export const ConfigurationForm = () => {
     });
   };
 
+  // validation for IpAddress
+  const validIpAddressRegex = /^(\d{1,3}\.){3}\d{1,3}\/\d{1,3}$/;
+
   //   submit form and post
   const submitPostConfigValue = async (e) => {
     e.preventDefault();
-    setSubmitLoading(true);
 
     if (!configValue.name) return toast.error("Configuration Name");
     if (
@@ -68,8 +70,13 @@ export const ConfigurationForm = () => {
       configValue.listenPort < 0
     )
       return toast.error("Listen Port");
-    if (!configValue.ipAddress) return toast.error("Ip Address");
+    if (
+      !configValue.ipAddress ||
+      !validIpAddressRegex.test(configValue.ipAddress)
+    )
+      return toast.error("Ip Address");
 
+    setSubmitLoading(true);
     await PostConfigurationInterface(configValue)
       .then((res) => {
         const { isSuccess, message } = res;
@@ -137,7 +144,7 @@ export const ConfigurationForm = () => {
           placeholder="0-65353"
           className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${
             configValue.listenPort > 65353 || configValue.listenPort < 0
-              ? "border-red-300"
+              ? "border-red-500"
               : ""
           }`}
         />
@@ -148,7 +155,7 @@ export const ConfigurationForm = () => {
           name="ipAddress"
           onChange={handleConfigInputValue}
           placeholder="Ex: 10.0.0.1/24"
-          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
+          className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none`}
         />
       </ConfigurationFormCard>
       <ConfigurationFormCard title={"Endpoint"}>
