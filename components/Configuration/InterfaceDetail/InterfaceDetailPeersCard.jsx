@@ -7,6 +7,7 @@ import { QRCodeSVG } from "qrcode.react";
 export const InterfaceDetailPeersCard = ({ peerDetail }) => {
   const { name } = peerDetail;
   const [peerConfig, setPeerConfig] = useState();
+  const [qrLoading, setQrLoading] = useState(false);
 
   const handleGetPeerConfig = async () => {
     await GetPeerConfig(name).then((res) => {
@@ -35,20 +36,33 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
               <BsDownload />
             </span>
             <span
-              onClick={() =>
-                document.getElementById("Qrcode_modal").showModal()
-              }
+              onClick={() => {
+                document.getElementById("Qrcode_modal").showModal();
+                setQrLoading(true);
+
+                setTimeout(() => {
+                  setQrLoading(false);
+                }, 2000);
+              }}
               className="btn !w-[28px] !min-h-[28px] !h-[24px] p-1"
             >
               <BsQrCode />
               <dialog id="Qrcode_modal" className="modal">
-                <div className="modal-box flex items-center justify-center">
+                <div className="modal-box bg-secondary text-primaryLight flex items-center justify-center">
                   <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                       ✕
                     </button>
                   </form>
-                  <QRCodeSVG value={peerConfig} size={256} level={"H"} />
+                  {qrLoading ? (
+                    <>
+                      <div>loading...</div>
+                    </>
+                  ) : (
+                    <>
+                      <QRCodeSVG value={peerConfig} size={256} level={"H"} />
+                    </>
+                  )}
                 </div>
                 <form method="dialog" className="modal-backdrop">
                   <button>close</button>
