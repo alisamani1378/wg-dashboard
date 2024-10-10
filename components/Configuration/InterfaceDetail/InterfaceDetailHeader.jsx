@@ -8,16 +8,12 @@ import {
   BsEthernet,
   BsPlusLg,
 } from "react-icons/bs";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
 import InterfaceNameContext from "@/context/InterfaceNameContext";
-import { GetInterfaceByName } from "@/api/interface";
-import toast from "react-hot-toast";
 
 export const InterfaceDetailHeader = ({ interfaceId }) => {
-  const [interfaceData, setInterfaceData] = useState();
   const { setInterfaceName } = useContext(InterfaceNameContext);
-
 
   // useEffect(() => {
   //   GetInterfaceByName(interfaceId).then(res => {
@@ -30,7 +26,6 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
   // }, []);
 
   // console.log(interfaceData);
-
 
   useEffect(() => {
     setInterfaceName(interfaceId);
@@ -92,7 +87,7 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
 
       <div className="w-full md:w-1/6 text-[#77ABF8] border border-[#063274] rounded bg-[#084298]/40 backdrop-blur hover:bg-[#084298]/60 transition-all duration-100">
         <Link
-          href={`${interfaceId}/creat`}
+          href={`/configuration/${interfaceId}/creat`}
           className="h-full flex items-center justify-center gap-2 py-3"
         >
           <BsPlusLg />

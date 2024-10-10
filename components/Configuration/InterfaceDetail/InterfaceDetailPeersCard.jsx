@@ -28,7 +28,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-secondary rounded-box z-[1] shadow"
+          className="dropdown-content menu bg-secondary rounded-box z-[1] w-[160px] shadow"
         >
           <div className="rounded-xl py-2 !bg-primaryLight !text-secondary grid grid-cols-3 place-items-center">
             <span className="btn !w-[28px] !min-h-[28px] !h-[24px] p-1">
@@ -42,7 +42,12 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
             >
               <BsQrCode />
               <dialog id="Qrcode_modal" className="modal">
-                <div className="modal-box">
+                <div className="modal-box flex items-center justify-center">
+                  <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                      ✕
+                    </button>
+                  </form>
                   <QRCodeSVG value={peerConfig} size={256} level={"H"} />
                 </div>
                 <form method="dialog" className="modal-backdrop">

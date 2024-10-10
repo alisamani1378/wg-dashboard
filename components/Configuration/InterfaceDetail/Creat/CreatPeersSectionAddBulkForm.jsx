@@ -5,6 +5,7 @@ import { BsFillPlusCircleFill } from "react-icons/bs";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
+import { PostPeerInterface } from "@/api/peer";
 
 export const CreatPeersSectionAddBulkForm = () => {
   const [bulkValue, setBulkValue] = useState({
@@ -49,7 +50,9 @@ export const CreatPeersSectionAddBulkForm = () => {
       return toast.error("Endpoint Allowed IPs");
 
     setSubmitLoading(true);
-    await PostPeerInterface(pathname.split("/")[2], {
+    const InterfaceName = pathname.split("/")[2];
+    console.log(InterfaceName);
+    await PostPeerInterface(InterfaceName, {
       ...bulkValue,
     })
       .then((res) => {
@@ -76,11 +79,7 @@ export const CreatPeersSectionAddBulkForm = () => {
               name="count"
               onChange={handleInputBulkValue}
               placeholder="How many peers you want to add?"
-              className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${
-                bulkValue.count >= 254 || bulkValue.count < 0
-                  ? "border-red-500"
-                  : ""
-              }`}
+              className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${bulkValue.count >= 254 || bulkValue.count < 0 ? "border-red-500" : ""}`}
             />
             <p className="text-xs mt-1">You can add up to 244 peers</p>
           </div>
