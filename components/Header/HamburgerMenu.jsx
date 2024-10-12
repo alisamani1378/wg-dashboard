@@ -31,7 +31,7 @@ export const HamburgerMenu = () => {
   return (
     <>
       <button
-        className="btn !w-[38px] !min-h-[38px] h-[38px] !bg-transparent !text-secondary !p-1 cursor-pointer border border-transparent  hover:border hover:border-secondary hover:rounded-xl transition-all duration-200"
+        className="block md:hidden btn !w-[38px] !min-h-[38px] h-[38px] !bg-transparent !text-secondary !p-1 cursor-pointer border border-transparent  hover:border hover:border-secondary hover:rounded-xl transition-all duration-200"
         onClick={handleOpenModal}
       >
         <BsList className="text-[28px] md:hidden" />

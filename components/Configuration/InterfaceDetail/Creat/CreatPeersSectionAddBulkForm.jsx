@@ -33,6 +33,7 @@ export const CreatPeersSectionAddBulkForm = () => {
       ...bulkValue,
       [e.target.name]: +e.target.value ? e.target.value : +e.target.value,
     });
+    console.log(bulkValue);
   };
 
   // validation for IpAddress
@@ -42,6 +43,7 @@ export const CreatPeersSectionAddBulkForm = () => {
     e.preventDefault();
     const { count, dns, mtu, persistentKeepalive, endpointAllowedIPs } =
       bulkValue;
+    console.log(bulkValue);
     if (count <= 0 || count >= 254) return toast.error("Bulk Count");
     if (!dns) return toast.error("Bulk Dns");
     if (!mtu) return toast.error("Bulk MTU");
@@ -79,7 +81,11 @@ export const CreatPeersSectionAddBulkForm = () => {
               name="count"
               onChange={handleInputBulkValue}
               placeholder="How many peers you want to add?"
-              className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${bulkValue.count >= 254 || bulkValue.count < 0 ? "border-red-500" : ""}`}
+              className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none ${
+                bulkValue.count >= 254 || bulkValue.count < 0
+                  ? "border-red-500"
+                  : ""
+              }`}
             />
             <p className="text-xs mt-1">You can add up to 244 peers</p>
           </div>
@@ -95,7 +101,12 @@ export const CreatPeersSectionAddBulkForm = () => {
               type="text"
               name="endpointAllowedIPs"
               defaultValue={bulkValue.endpointAllowedIPs}
-              onChange={handleInputBulkValue}
+              onChange={(e) =>
+                setBulkValue({
+                  ...bulkValue,
+                  endpointAllowedIPs: e.target.value,
+                })
+              }
               className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
             />
           </div>
@@ -105,7 +116,9 @@ export const CreatPeersSectionAddBulkForm = () => {
               type="text"
               name="dns"
               defaultValue={bulkValue.dns}
-              onChange={handleInputBulkValue}
+              onChange={(e) =>
+                setBulkValue({ ...bulkValue, dns: e.target.value })
+              }
               className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
             />
           </div>

@@ -27,7 +27,6 @@ export const InterfaceDetailPeers = () => {
 
     await GetPeer(searchQuery)
       .then((res) => {
-        console.log(res);
         setPeers(res.data);
       })
       .catch((er) => {
@@ -122,12 +121,10 @@ export const InterfaceDetailPeers = () => {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 text-secondary">
             {peers?.peers.map((peer) => {
               return (
-                <>
-                  <InterfaceDetailPeersCard peerDetail={peer} />
-                </>
+                <InterfaceDetailPeersCard key={peer.id} peerDetail={peer} />
               );
             })}
           </div>
