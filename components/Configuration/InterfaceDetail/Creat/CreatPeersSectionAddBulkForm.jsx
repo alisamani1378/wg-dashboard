@@ -6,6 +6,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { PostPeerInterface } from "@/api/peer";
+import DatePicker, { DateObject } from "react-multi-date-picker";
+import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 
 export const CreatPeersSectionAddBulkForm = () => {
   const [bulkValue, setBulkValue] = useState({
@@ -20,9 +22,17 @@ export const CreatPeersSectionAddBulkForm = () => {
     mtu: 1420,
     persistentKeepalive: 21,
     endpointAllowedIPs: "0.0.0.0/0",
+    expireTime: 0,
+    totalVolume: 0,
+    status: "onhold",
+    onHoldExpireDurection: 0,
   });
 
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [expireTimevalue, setExpireTimeValue] = useState(new DateObject());
+  const [onHoldDaysExpire, setOnHoldDaysExpire] = useState();
+  const [changeOnHoldAndActiveData, sethangeOnHoldAndActiveData] =
+    useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -33,23 +43,55 @@ export const CreatPeersSectionAddBulkForm = () => {
       ...bulkValue,
       [e.target.name]: +e.target.value ? e.target.value : +e.target.value,
     });
-    console.log(bulkValue);
   };
 
-  // validation for IpAddress
-  const validIpAddressRegex = /^(\d{1,3}\.){3}\d{1,3}\/\d{1,3}$/;
+  const handleChangeOnHoldActive = () => {
+    sethangeOnHoldAndActiveData((prev) => !prev);
+  };
 
   const submitAddBulkForm = async (e) => {
     e.preventDefault();
     const { count, dns, mtu, persistentKeepalive, endpointAllowedIPs } =
       bulkValue;
-    console.log(bulkValue);
+
+    // validation for IpAddress
+    const validIpAddressRegex = /^(\d{1,3}\.){3}\d{1,3}\/\d{1,3}$/;
+
     if (count <= 0 || count >= 254) return toast.error("Bulk Count");
     if (!dns) return toast.error("Bulk Dns");
     if (!mtu) return toast.error("Bulk MTU");
     if (!persistentKeepalive) return toast.error("Persistent Keepalive");
     if (!endpointAllowedIPs || !validIpAddressRegex.test(endpointAllowedIPs))
       return toast.error("Endpoint Allowed IPs");
+
+    console.log(changeOnHoldAndActiveData);
+
+    if (onHoldDaysExpire && onHoldDaysExpire > 0 && changeOnHoldAndActiveData) {
+      const currentDate = new Date();
+      const newDate = new Date(
+        currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000
+      );
+
+      const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
+      setBulkValue({
+        ...bulkValue,
+        changeOnHoldAndActiveData: "onhold",
+        onHoldExpireDurection: onHoldExpireTime,
+        expireTime: 0,
+      });
+    } else if (expireTimevalue && !changeOnHoldAndActiveData) {
+      const time = Math.floor(expireTimevalue.toDate().getTime() / 1000);
+      setBulkValue({
+        ...bulkValue,
+        expireTime: time,
+        changeOnHoldAndActiveData: "active",
+        onHoldExpireDurection: 0,
+      });
+    } else {
+      toast.error("Expire Time");
+    }
+
+    console.log(bulkValue);
 
     setSubmitLoading(true);
     const InterfaceName = pathname.split("/")[2];
@@ -88,6 +130,53 @@ export const CreatPeersSectionAddBulkForm = () => {
               }`}
             />
             <p className="text-xs mt-1">You can add up to 244 peers</p>
+            <div className="flex items-center justify-end">
+              <label className="label cursor-pointer justify-normal gap-2">
+                <span className="label-text font-semibold text-gray-500">
+                  On Hold
+                </span>
+                <input
+                  type="checkbox"
+                  checked={changeOnHoldAndActiveData}
+                  value={changeOnHoldAndActiveData}
+                  onChange={handleChangeOnHoldActive}
+                  className="toggle toggle-sm checked:toggle-success"
+                />
+                <span className="label-text font-semibold text-green-500">
+                  Active
+                </span>
+              </label>
+            </div>
+            <div className="flex items-center gap-3 mt-4">
+              {changeOnHoldAndActiveData ? (
+                <>
+                  <span>Expire Time</span>
+                  <DatePicker
+                    value={expireTimevalue}
+                    className="bg-dark"
+                    inputClass="bg-transparent border border-primaryLight rounded-lg px-3 py-2 focus:outline-none"
+                    calendarPosition="bottom-right"
+                    onChange={setExpireTimeValue}
+                  />
+                </>
+              ) : (
+                <div className=" flex items-center gap-3 relative">
+                  <span>Expire Time Duration</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="365"
+                    onChange={(e) => setOnHoldDaysExpire(e.target.value)}
+                    className="bg-transparent rounded-lg border border-primaryLight border-stroke px-3 py-2 outline-none"
+                  />
+                  {onHoldDaysExpire && (
+                    <span className=" absolute right-3 bottom-2.5 text-sm">
+                      days
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* this is a gap */}
