@@ -2,7 +2,7 @@
 import Button from "@/components/common/Button";
 import { ConfigurationFormCard } from "../../ConfigurationFormCard";
 import { BsFillPlusCircleFill } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { PostPeerInterface } from "@/api/peer";
@@ -49,6 +49,35 @@ export const CreatPeersSectionAddBulkForm = () => {
     sethangeOnHoldAndActiveData((prev) => !prev);
   };
 
+  useEffect(() => {
+    if (
+      onHoldDaysExpire &&
+      onHoldDaysExpire > 0 &&
+      !changeOnHoldAndActiveData
+    ) {
+      const currentDate = new Date();
+      const newDate = new Date(
+        currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000
+      );
+
+      const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
+      setBulkValue({
+        ...bulkValue,
+        changeOnHoldAndActiveData: "onhold",
+        onHoldExpireDurection: onHoldExpireTime,
+        expireTime: 0,
+      });
+    } else if (expireTimevalue && changeOnHoldAndActiveData) {
+      const time = Math.floor(expireTimevalue.toDate().getTime() / 1000);
+      setBulkValue({
+        ...bulkValue,
+        expireTime: time,
+        changeOnHoldAndActiveData: "active",
+        onHoldExpireDurection: 0,
+      });
+    }
+  }, [onHoldDaysExpire, expireTimevalue, changeOnHoldAndActiveData]);
+
   const submitAddBulkForm = async (e) => {
     e.preventDefault();
     const { count, dns, mtu, persistentKeepalive, endpointAllowedIPs } =
@@ -64,53 +93,55 @@ export const CreatPeersSectionAddBulkForm = () => {
     if (!endpointAllowedIPs || !validIpAddressRegex.test(endpointAllowedIPs))
       return toast.error("Endpoint Allowed IPs");
 
-    console.log(changeOnHoldAndActiveData);
+    // if (
+    //   onHoldDaysExpire &&
+    //   onHoldDaysExpire > 0 &&
+    //   !changeOnHoldAndActiveData
+    // ) {
+    //   const currentDate = new Date();
+    //   const newDate = new Date(
+    //     currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000
+    //   );
 
-    if (onHoldDaysExpire && onHoldDaysExpire > 0 && changeOnHoldAndActiveData) {
-      const currentDate = new Date();
-      const newDate = new Date(
-        currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000
-      );
-
-      const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
-      setBulkValue({
-        ...bulkValue,
-        changeOnHoldAndActiveData: "onhold",
-        onHoldExpireDurection: onHoldExpireTime,
-        expireTime: 0,
-      });
-    } else if (expireTimevalue && !changeOnHoldAndActiveData) {
-      const time = Math.floor(expireTimevalue.toDate().getTime() / 1000);
-      setBulkValue({
-        ...bulkValue,
-        expireTime: time,
-        changeOnHoldAndActiveData: "active",
-        onHoldExpireDurection: 0,
-      });
-    } else {
-      toast.error("Expire Time");
-    }
+    //   const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
+    //   setBulkValue({
+    //     ...bulkValue,
+    //     changeOnHoldAndActiveData: "onhold",
+    //     onHoldExpireDurection: onHoldExpireTime,
+    //     expireTime: 0,
+    //   });
+    // } else if (expireTimevalue && changeOnHoldAndActiveData) {
+    //   const time = Math.floor(expireTimevalue.toDate().getTime() / 1000);
+    //   setBulkValue({
+    //     ...bulkValue,
+    //     expireTime: time,
+    //     changeOnHoldAndActiveData: "active",
+    //     onHoldExpireDurection: 0,
+    //   });
+    // } else {
+    //   toast.error("Expire Time");
+    // }
 
     console.log(bulkValue);
 
-    setSubmitLoading(true);
-    const InterfaceName = pathname.split("/")[2];
-    console.log(InterfaceName);
-    await PostPeerInterface(InterfaceName, {
-      ...bulkValue,
-    })
-      .then((res) => {
-        const { isSuccess } = res;
-        if (isSuccess) {
-          toast.success(res.message);
-          router.back();
-        } else {
-          toast.error(res.message);
-        }
-      })
-      .finally(() => {
-        setSubmitLoading(false);
-      });
+    // setSubmitLoading(true);
+    // const InterfaceName = pathname.split("/")[2];
+    // console.log(InterfaceName);
+    // await PostPeerInterface(InterfaceName, {
+    //   ...bulkValue,
+    // })
+    //   .then((res) => {
+    //     const { isSuccess } = res;
+    //     if (isSuccess) {
+    //       toast.success(res.message);
+    //       router.back();
+    //     } else {
+    //       toast.error(res.message);
+    //     }
+    //   })
+    //   .finally(() => {
+    //     setSubmitLoading(false);
+    //   });
   };
 
   return (
@@ -160,12 +191,10 @@ export const CreatPeersSectionAddBulkForm = () => {
                   />
                 </>
               ) : (
-                <div className=" flex items-center gap-3 relative">
+                <div className="flex items-center gap-3 relative">
                   <span>Expire Time Duration</span>
                   <input
                     type="number"
-                    min="1"
-                    max="365"
                     onChange={(e) => setOnHoldDaysExpire(e.target.value)}
                     className="bg-transparent rounded-lg border border-primaryLight border-stroke px-3 py-2 outline-none"
                   />
@@ -176,6 +205,50 @@ export const CreatPeersSectionAddBulkForm = () => {
                   )}
                 </div>
               )}
+            </div>
+            <div className="w-ful grid grid-cols-3 mt-4">
+              <div className="col-span-1">
+                <label className="mb-1 block font-bold">GB</label>
+                <input
+                  type="number"
+                  defaultValue={bulkValue.totalVolume}
+                  onChange={(e) =>
+                    setBulkValue({
+                      ...bulkValue,
+                      totalVolume: e.target.value * 1000000,
+                    })
+                  }
+                  className="bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+                />
+              </div>
+              {/* <div className="col-span-1">
+                <label className="mb-1 block font-bold">MB</label>
+                <input
+                  type="number"
+                  defaultValue={bulkValue.totalVolume * 1000}
+                  onChange={(e) =>
+                    setBulkValue({
+                      ...bulkValue,
+                      totalVolume: e.target.value,
+                    })
+                  }
+                  className="bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+                />
+              </div>
+              <div className="col-span-1">
+                <label className="mb-1 block font-bold">KB</label>
+                <input
+                  type="number"
+                  defaultValue={bulkValue.totalVolume * 1000000}
+                  onChange={(e) =>
+                    setBulkValue({
+                      ...bulkValue,
+                      totalVolume: e.target.value,
+                    })
+                  }
+                  className="bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+                />
+              </div> */}
             </div>
           </div>
 
