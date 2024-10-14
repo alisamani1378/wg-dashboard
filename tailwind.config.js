@@ -13,6 +13,7 @@ module.exports = {
         primary: "#1F1F1F",
         primaryLight: "#3D3D3D",
         secondary: "#CCCCCC",
+        secondaryDark: "#5C5C5C",
       },
       backgroundSize: {
         "size-200": "200% 200%",

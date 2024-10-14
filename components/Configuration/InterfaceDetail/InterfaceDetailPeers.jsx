@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { GetPeer } from "@/api/peer";
 import toast from "react-hot-toast";
 import { InterfaceDetailPeersCard } from "@/components/Configuration/InterfaceDetail/InterfaceDetailPeersCard";
-import { ScaleLoader } from "react-spinners";
 import { BsSearch } from "react-icons/bs";
 import { FaSortAmountDownAlt, FaSortAmountUp } from "react-icons/fa";
 import { usePathname } from "next/navigation";
@@ -46,7 +45,7 @@ export const InterfaceDetailPeers = () => {
     fetchPeers(searchQuery);
   }, [currentPage, filter.Skip, filter.Take, filter.name]);
 
-  const paginationNumber = Math.floor(peers?.countPeer / 10);
+  const paginationNumber = Math.floor(peers?.countPeer / filter.Take);
   const paginationArray = Array.from(
     { length: paginationNumber + 1 },
     (_, index) => index,
@@ -87,9 +86,7 @@ export const InterfaceDetailPeers = () => {
   return (
     <div className="w-full">
       {peerLoading ? (
-        <div className="text-center w-full h-[360px] flex justify-center items-center">
-          <ScaleLoader color="#fff" />
-        </div>
+        <div className="text-center w-full h-[360px] flex justify-center items-center"></div>
       ) : (
         <>
           <div className="w-full flex justify-between items-center gap-4  mb-4">

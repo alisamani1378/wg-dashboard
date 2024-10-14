@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
+import { PostPeerInterface } from "@/api/peer";
 
 export const CreatPeersSectionAddBulkForm = () => {
   const [bulkValue, setBulkValue] = useState({
@@ -57,21 +58,20 @@ export const CreatPeersSectionAddBulkForm = () => {
       onHoldDaysExpire > 0 ||
       !changeOnHoldAndActiveData
     ) {
-      console.log(1);
-      const currentDate = new Date();
-      const newDate = new Date(
-        currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000,
-      );
+      const newOnHoldExpireDate = onHoldDaysExpire * 24 * 60 * 60;
+      // const currentDate = new Date();
+      // const newDate = new Date(
+      //   currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000,
+      // );
+      // const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
 
-      const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
       setBulkValue({
         ...bulkValue,
         status: "onhold",
-        onHoldExpireDurection: onHoldExpireTime,
+        onHoldExpireDurection: newOnHoldExpireDate,
         expireTime: 0,
       });
     } else if (expireTimevalue || changeOnHoldAndActiveData) {
-      console.log(2);
       const time = Math.floor(expireTimevalue.toDate().getTime() / 1000);
       setBulkValue({
         ...bulkValue,
@@ -115,26 +115,23 @@ export const CreatPeersSectionAddBulkForm = () => {
     if (!endpointAllowedIPs || !validIpAddressRegex.test(endpointAllowedIPs))
       return toast.error("Endpoint Allowed IPs");
 
-    console.log(bulkValue);
-
-    // setSubmitLoading(true);
-    // const InterfaceName = pathname.split("/")[2];
-    // console.log(InterfaceName);
-    // await PostPeerInterface(InterfaceName, {
-    //   ...bulkValue,
-    // })
-    //   .then((res) => {
-    //     const { isSuccess } = res;
-    //     if (isSuccess) {
-    //       toast.success(res.message);
-    //       router.back();
-    //     } else {
-    //       toast.error(res.message);
-    //     }
-    //   })
-    //   .finally(() => {
-    //     setSubmitLoading(false);
-    //   });
+    setSubmitLoading(true);
+    const InterfaceName = pathname.split("/")[2];
+    await PostPeerInterface(InterfaceName, {
+      ...bulkValue,
+    })
+      .then((res) => {
+        const { isSuccess } = res;
+        if (isSuccess) {
+          toast.success(res.message);
+          router.back();
+        } else {
+          toast.error(res.message);
+        }
+      })
+      .finally(() => {
+        setSubmitLoading(false);
+      });
   };
 
   return (
@@ -230,11 +227,14 @@ export const CreatPeersSectionAddBulkForm = () => {
                   <p>
                     MB:{" "}
                     <span>
-                      {(bulkValue.totalVolume / 1000).toLocaleString()}
+                      {(bulkValue.totalVolume / 1000000).toLocaleString()}
                     </span>
                   </p>
                   <p>
-                    KB: <span>{bulkValue.totalVolume.toLocaleString()}</span>
+                    KB:{" "}
+                    <span>
+                      {(bulkValue.totalVolume / 1000).toLocaleString()}
+                    </span>
                   </p>
                 </div>
               ) : null}

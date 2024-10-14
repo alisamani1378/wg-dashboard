@@ -8,28 +8,73 @@ import {
   BsEthernet,
   BsPlusLg,
 } from "react-icons/bs";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import InterfaceNameContext from "@/context/InterfaceNameContext";
+import { GetInterfaceByName, UpdateConfigurationStatus } from "@/api/interface";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { ScaleLoader } from "react-spinners";
 
 export const InterfaceDetailHeader = ({ interfaceId }) => {
+  const [interFaceDataLoading, setInterFaceDataLoading] = useState(true);
+  const [interFaceData, setInterFaceData] = useState();
+  const [changeInterFaceStatus, setChangeInterFaceStatus] = useState(false);
   const { setInterfaceName } = useContext(InterfaceNameContext);
 
-  // useEffect(() => {
-  //   GetInterfaceByName(interfaceId).then(res => {
-  //     if (res.isSuccess) {
-  //       setInterfaceData(res.data)
-  //     } else {
-  //       toast.error(res.message)
-  //     }
-  //   })
-  // }, []);
+  const router = useRouter();
 
-  // console.log(interfaceData);
+  const fetchInterFaceByName = async () => {
+    GetInterfaceByName(interfaceId)
+      .then((res) => {
+        const { isSuccess, data, message } = res;
+        if (isSuccess) {
+          setInterFaceData(data);
+        } else {
+          toast.error(message);
+          router.push("/");
+          setInterFaceDataLoading(false);
+        }
+      })
+      .finally(() => {
+        setInterFaceDataLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchInterFaceByName();
+  }, []);
 
   useEffect(() => {
     setInterfaceName(interfaceId);
   }, [interfaceId, setInterfaceName]);
+
+  const name = interFaceData?.name;
+  const status = interFaceData?.status;
+  const totoalDataUsed = interFaceData?.totoalDataUsed / 1073741824;
+  const totalData = interFaceData?.totalData / 1073741824;
+
+  const handleChangeStatusWithInterFaceName = async () => {
+    setChangeInterFaceStatus(true);
+    const ChangeStatusValue = {
+      status: status === "disabled" ? 0 : 1,
+      name: name,
+    };
+    await UpdateConfigurationStatus(ChangeStatusValue)
+      .then((res) => {
+        window.location.reload();
+        setChangeInterFaceStatus(false);
+      })
+      .finally(() => setChangeInterFaceStatus(false));
+  };
+
+  if (interFaceDataLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <ScaleLoader color="#fff" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -38,19 +83,26 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
           <p className="text-[24px] tracking-widest font-light text-[#B8B8B8]">
             Interface
           </p>
-          <p className="text-[32px] font-bold">{interfaceId}</p>
+          <p className="text-[32px] font-bold">{name}</p>
         </div>
         <div className="w-[132px] flex justify-between items-center px-5 py-2 border border-primaryLight rounded">
           <div>
             <p>Status</p>
             <input
               type="checkbox"
-              className="toggle toggle-sm toggle-error checked:toggle-success mt-2"
+              disabled={changeInterFaceStatus}
+              checked={status !== "disabled"}
+              onChange={handleChangeStatusWithInterFaceName}
+              className="toggle toggle-sm checked:toggle-success mt-2"
             />
           </div>
           <div>
-            <span className="w-3 h-3 bg-green-100 rounded-full flex justify-center items-center">
-              <span className="w-[6px] h-[6px] mx-auto block bg-green-800 rounded-full animate-ping"></span>
+            <span className="w-3 h-3 bg-white rounded-full flex justify-center items-center">
+              {interFaceData?.status !== "disabled" ? (
+                <span className="w-[6px] h-[6px] mx-auto block bg-green-800 rounded-full animate-ping"></span>
+              ) : (
+                <span className="w-[6px] h-[6px] mx-auto block bg-red-800 rounded-full animate-ping"></span>
+              )}
             </span>
           </div>
         </div>
@@ -63,20 +115,20 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
         />
         <InterfaceDetailHeaderCard
           title={"Total Usage"}
-          amount={0.8559}
+          amount={totalData.toFixed(4)}
           showGb
           icon={<BsArrowDownUp className="text-[28px]" />}
         />
         <InterfaceDetailHeaderCard
           title={"Total Received"}
-          amount={0.092}
+          amount={totoalDataUsed.toFixed(4)}
           showGb
           amountColor={"blue"}
           icon={<BsArrowDown className="text-[28px] text-blue-600" />}
         />
         <InterfaceDetailHeaderCard
           title={"Total Sent"}
-          amount={0.7638}
+          amount={0}
           showGb
           amountColor={"green"}
           icon={<BsArrowUp className="text-[28px] text-green-600" />}

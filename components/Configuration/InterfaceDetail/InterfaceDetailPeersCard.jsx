@@ -5,19 +5,22 @@ import {
   BsArrowDown,
   BsArrowUp,
   BsDownload,
+  BsPen,
   BsQrCode,
   BsShare,
   BsThreeDots,
 } from "react-icons/bs";
 import { QRCodeSVG } from "qrcode.react";
+import { EditPeer } from "@/components/Configuration/InterfaceDetail/EditPeer";
 
 export const InterfaceDetailPeersCard = ({ peerDetail }) => {
-  const { name, allowedIPs, publicKey } = peerDetail;
+  const { name, allowedIPs, publicKey, status } = peerDetail;
   const [peerConfig, setPeerConfig] = useState();
-  const [qrLoading, setQrLoading] = useState(false);
-  const [openQrCodeModalId, setQrCodeOpenModalId] = useState(null);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [openModalId, setOpenModalId] = useState(null);
+  const [modalFor, setModalFor] = useState("");
 
-  const handleGetPeerConfig = async (name) => {
+  const GetPeerConfigFetch = async (name) => {
     await GetPeerConfig(name)
       .then((res) => {
         setPeerConfig(res?.data);
@@ -28,30 +31,72 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
   };
 
   const handleOpenQrCodeModal = async (name) => {
-    setQrLoading(true);
-    await handleGetPeerConfig(name);
-    setQrCodeOpenModalId(name);
+    console.log(modalFor);
+    setModalLoading(true);
+    await GetPeerConfigFetch(name);
+    setOpenModalId(name);
+    setModalFor("qrcode");
     setTimeout(() => {
-      setQrLoading(false);
+      setModalLoading(false);
+    }, 1000);
+  };
+
+  const handleOpenEditPeerModal = async (name) => {
+    setModalLoading(true);
+    setOpenModalId(name);
+    setModalFor("edit_peer");
+    setTimeout(() => {
+      setModalLoading(false);
     }, 1000);
   };
 
   const handleCloseQrCodeModal = () => {
-    setQrCodeOpenModalId(null);
+    setOpenModalId(null);
   };
 
   return (
     <>
       <div className="col-span-1 w-full h-[240px] grid grid-cols-4 grid-rows-4 p-2 border border-primaryLight rounded-md ">
-        <div className="col-start-3 flex items-center justify-center gap-1 text-blue-600">
-          <BsArrowDown />
-          <span>0.00000</span>
-          <span>GB</span>
-        </div>
-        <div className="flex items-center justify-center gap-1 text-green-600">
-          <BsArrowUp />
-          <span>0.00000</span>
-          <span>GB</span>
+        <span
+          className={`w-fit h-fit text-[12px] px-1 py-0.5 rounded ${
+            status === "onhold"
+              ? "bg-yellow-500"
+              : status === "active"
+                ? "bg-green-500"
+                : status === "expired"
+                  ? "bg-red-500"
+                  : status === "limited"
+                    ? "bg-blue-500"
+                    : status === "disabled"
+                      ? "bg-indigo-500"
+                      : null
+          }`}
+        >
+          {status === "onhold" ? (
+            <>On Hold</>
+          ) : status === "active" ? (
+            <>Active</>
+          ) : status === "expired" ? (
+            <>Expired</>
+          ) : status === "limited" ? (
+            <>Limited</>
+          ) : status === "disabled" ? (
+            <>Disable</>
+          ) : (
+            ""
+          )}
+        </span>
+        <div className="col-start-2 col-end-5 xl:col-start-3 flex items-center justify-between">
+          <div className="w-full flex items-center justify-center gap-1 text-blue-600 text-sm">
+            <BsArrowDown />
+            <span>0.00000</span>
+            <span>GB</span>
+          </div>
+          <div className="w-full flex items-center justify-center gap-1 text-green-600 text-sm">
+            <BsArrowUp />
+            <span>0.00000</span>
+            <span>GB</span>
+          </div>
         </div>
         <div className="col-span-3">
           <p className="line-clamp-1">{name}</p>
@@ -74,35 +119,41 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu bg-secondary rounded-box z-[1] w-[160px] shadow"
+            className="dropdown-content menu bg-white/30 backdrop-blur rounded-box z-[1] w-[160px] shadow gap-2"
           >
-            <div className="rounded-xl py-2 !bg-primaryLight !text-secondary grid grid-cols-3 place-items-center">
-              <span className="btn !w-[28px] !min-h-[28px] !h-[24px] p-1">
+            <li className="w-full !bg-transparent grid grid-cols-3 gap-2">
+              <span className="btn w-full !min-h-[32px] !h-[32px] p-1">
                 <BsDownload />
               </span>
               <span
-                onClick={() => handleOpenQrCodeModal(name)}
-                // onClick={() => {
-                //   document.getElementById("Qrcode_modal").showModal();
-                //   setQrLoading(true);
-                //   handleGetPeerConfig();
-                //   setTimeout(() => {
-                //     setQrLoading(false);
-                //   }, 2200);
-                // }}
-                className="btn !w-[28px] !min-h-[28px] !h-[24px] p-1"
+                onClick={() => {
+                  setModalFor("qrcode");
+                  handleOpenQrCodeModal(name);
+                }}
+                className="btn w-full !min-h-[32px] !h-[32px] p-1"
               >
                 <BsQrCode />
               </span>
-              <span className="btn !w-[28px] !min-h-[28px] !h-[24px] p-1">
+              <span className="btn w-full !min-h-[32px] !h-[32px] p-1">
                 <BsShare />
               </span>
-            </div>
+            </li>
+            <li className="w-full bg-transparent">
+              <span
+                onClick={() => {
+                  setModalFor("edit_peer");
+                  handleOpenEditPeerModal(name);
+                }}
+                className="btn w-full !min-h-[32px] !h-[32px] p-1 "
+              >
+                Edit <BsPen />
+              </span>
+            </li>
           </ul>
 
-          {/*qrcode modal for each peer*/}
-          {openQrCodeModalId === name && (
-            <dialog open className="modal">
+          {/*modal for each peer*/}
+          {openModalId === name && (
+            <dialog open className="modal bg-white/5 backdrop-blur">
               <div className="modal-box bg-secondary text-primaryLight flex items-center justify-center">
                 <form method="dialog">
                   <button
@@ -112,13 +163,17 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
                     ✕
                   </button>
                 </form>
-                {qrLoading ? (
+                {modalLoading ? (
                   <>
                     <div>loading...</div>
                   </>
                 ) : (
                   <>
-                    <QRCodeSVG value={peerConfig} size={256} level={"H"} />
+                    {modalFor === "qrcode" ? (
+                      <QRCodeSVG value={peerConfig} size={256} level={"H"} />
+                    ) : modalFor === "edit_peer" ? (
+                      <EditPeer EditPeerData={peerDetail} />
+                    ) : null}
                   </>
                 )}
               </div>

@@ -37,7 +37,7 @@ export const HamburgerMenu = () => {
         <BsList className="text-[28px] md:hidden" />
       </button>
       <dialog id="my_modal_2" className="modal">
-        <div className="modal-box min-h-[480px]">
+        <div className="modal-box min-h-[480px] !bg-secondary">
           <Sidebar visible={showSideBar} closeModal={handleCloseModal} />
         </div>
         <form method="dialog" className="modal-backdrop">
