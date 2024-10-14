@@ -5,7 +5,6 @@ import { BsFillPlusCircleFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
-import { PostPeerInterface } from "@/api/peer";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 
@@ -31,7 +30,7 @@ export const CreatPeersSectionAddBulkForm = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [expireTimevalue, setExpireTimeValue] = useState(new DateObject());
   const [onHoldDaysExpire, setOnHoldDaysExpire] = useState();
-  const [changeOnHoldAndActiveData, sethangeOnHoldAndActiveData] =
+  const [changeOnHoldAndActiveData, setChangeOnHoldAndActiveData] =
     useState(false);
 
   const router = useRouter();
@@ -45,34 +44,39 @@ export const CreatPeersSectionAddBulkForm = () => {
     });
   };
 
-  const handleChangeOnHoldActive = () => {
-    sethangeOnHoldAndActiveData((prev) => !prev);
+  const handleChangeOnHoldActive = (e) => {
+    setChangeOnHoldAndActiveData((prev) => !prev);
+
+    setOnHoldDaysExpire(null);
+    setExpireTimeValue(new DateObject());
   };
 
   useEffect(() => {
     if (
-      onHoldDaysExpire &&
-      onHoldDaysExpire > 0 &&
+      onHoldDaysExpire !== null ||
+      onHoldDaysExpire > 0 ||
       !changeOnHoldAndActiveData
     ) {
+      console.log(1);
       const currentDate = new Date();
       const newDate = new Date(
-        currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000
+        currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000,
       );
 
       const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
       setBulkValue({
         ...bulkValue,
-        changeOnHoldAndActiveData: "onhold",
+        status: "onhold",
         onHoldExpireDurection: onHoldExpireTime,
         expireTime: 0,
       });
-    } else if (expireTimevalue && changeOnHoldAndActiveData) {
+    } else if (expireTimevalue || changeOnHoldAndActiveData) {
+      console.log(2);
       const time = Math.floor(expireTimevalue.toDate().getTime() / 1000);
       setBulkValue({
         ...bulkValue,
         expireTime: time,
-        changeOnHoldAndActiveData: "active",
+        status: "active",
         onHoldExpireDurection: 0,
       });
     }
@@ -80,47 +84,36 @@ export const CreatPeersSectionAddBulkForm = () => {
 
   const submitAddBulkForm = async (e) => {
     e.preventDefault();
-    const { count, dns, mtu, persistentKeepalive, endpointAllowedIPs } =
-      bulkValue;
+    const {
+      count,
+      dns,
+      mtu,
+      persistentKeepalive,
+      endpointAllowedIPs,
+      totalVolume,
+      onHoldExpireDurection,
+      status,
+    } = bulkValue;
+    console.log(bulkValue);
 
     // validation for IpAddress
     const validIpAddressRegex = /^(\d{1,3}\.){3}\d{1,3}\/\d{1,3}$/;
 
     if (count <= 0 || count >= 254) return toast.error("Bulk Count");
+    if (status === "onhold") {
+      if (
+        onHoldDaysExpire <= 0 ||
+        onHoldExpireDurection <= 0 ||
+        isNaN(onHoldExpireDurection)
+      )
+        return toast.error("Hold Expire Days");
+    }
     if (!dns) return toast.error("Bulk Dns");
     if (!mtu) return toast.error("Bulk MTU");
     if (!persistentKeepalive) return toast.error("Persistent Keepalive");
+    if (!totalVolume || totalVolume <= 0) return toast.error("Total Volume");
     if (!endpointAllowedIPs || !validIpAddressRegex.test(endpointAllowedIPs))
       return toast.error("Endpoint Allowed IPs");
-
-    // if (
-    //   onHoldDaysExpire &&
-    //   onHoldDaysExpire > 0 &&
-    //   !changeOnHoldAndActiveData
-    // ) {
-    //   const currentDate = new Date();
-    //   const newDate = new Date(
-    //     currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000
-    //   );
-
-    //   const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
-    //   setBulkValue({
-    //     ...bulkValue,
-    //     changeOnHoldAndActiveData: "onhold",
-    //     onHoldExpireDurection: onHoldExpireTime,
-    //     expireTime: 0,
-    //   });
-    // } else if (expireTimevalue && changeOnHoldAndActiveData) {
-    //   const time = Math.floor(expireTimevalue.toDate().getTime() / 1000);
-    //   setBulkValue({
-    //     ...bulkValue,
-    //     expireTime: time,
-    //     changeOnHoldAndActiveData: "active",
-    //     onHoldExpireDurection: 0,
-    //   });
-    // } else {
-    //   toast.error("Expire Time");
-    // }
 
     console.log(bulkValue);
 
@@ -161,99 +154,95 @@ export const CreatPeersSectionAddBulkForm = () => {
               }`}
             />
             <p className="text-xs mt-1">You can add up to 244 peers</p>
-            <div className="flex items-center justify-end">
-              <label className="label cursor-pointer justify-normal gap-2">
-                <span className="label-text font-semibold text-gray-500">
-                  On Hold
-                </span>
-                <input
-                  type="checkbox"
-                  checked={changeOnHoldAndActiveData}
-                  value={changeOnHoldAndActiveData}
-                  onChange={handleChangeOnHoldActive}
-                  className="toggle toggle-sm checked:toggle-success"
-                />
-                <span className="label-text font-semibold text-green-500">
-                  Active
-                </span>
-              </label>
-            </div>
-            <div className="flex items-center gap-3 mt-4">
-              {changeOnHoldAndActiveData ? (
-                <>
-                  <span>Expire Time</span>
-                  <DatePicker
-                    value={expireTimevalue}
-                    className="bg-dark"
-                    inputClass="bg-transparent border border-primaryLight rounded-lg px-3 py-2 focus:outline-none"
-                    calendarPosition="bottom-right"
-                    onChange={setExpireTimeValue}
-                  />
-                </>
-              ) : (
-                <div className="flex items-center gap-3 relative">
-                  <span>Expire Time Duration</span>
+
+            {/* this is a gap */}
+            <div className="h-[1px] bg-primaryLight my-6 rounded"></div>
+
+            {/*expire time*/}
+            <div className="flex flex-col mt-3">
+              <div>
+                <label className="label cursor-pointer justify-normal gap-2">
+                  <span className="label-text font-semibold text-gray-500">
+                    On Hold
+                  </span>
                   <input
-                    type="number"
-                    onChange={(e) => setOnHoldDaysExpire(e.target.value)}
-                    className="bg-transparent rounded-lg border border-primaryLight border-stroke px-3 py-2 outline-none"
+                    type="checkbox"
+                    checked={changeOnHoldAndActiveData}
+                    value={changeOnHoldAndActiveData}
+                    onChange={handleChangeOnHoldActive}
+                    className="toggle toggle-sm checked:toggle-success"
                   />
-                  {onHoldDaysExpire && (
-                    <span className=" absolute right-3 bottom-2.5 text-sm">
-                      days
+                  <span className="label-text font-semibold text-[#00a96e]">
+                    Active
+                  </span>
+                </label>
+              </div>
+              <div className="w-full sm:w-fit flex items-center justify-between sm:justify-normal gap-2 mt-4 relative">
+                {changeOnHoldAndActiveData ? (
+                  <>
+                    <span>Expire Time</span>
+                    <DatePicker
+                      value={expireTimevalue}
+                      className="bg-dark"
+                      inputClass="bg-transparent border border-primaryLight rounded-lg px-3 py-2 focus:outline-none"
+                      calendarPosition="bottom-right"
+                      onChange={setExpireTimeValue}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <span>Expire Time Duration</span>
+                    <input
+                      type="number"
+                      onChange={(e) => setOnHoldDaysExpire(e.target.value)}
+                      className="w-1/3 sm:w-fit bg-transparent rounded-lg border border-primaryLight border-stroke px-3 pr-12 py-2 outline-none"
+                    />
+                    <span className="absolute right-3 bottom-2.5 text-sm">
+                      Days
                     </span>
-                  )}
-                </div>
-              )}
+                  </>
+                )}
+              </div>
             </div>
-            <div className="w-ful grid grid-cols-3 mt-4">
-              <div className="col-span-1">
+
+            {/* this is a gap */}
+            <div className="h-[1px] bg-primaryLight my-6 rounded"></div>
+
+            {/*total volumes*/}
+            <div className="w-full flex justify-between overflow-hidden mt-4">
+              <div className="w-1/3">
                 <label className="mb-1 block font-bold">GB</label>
                 <input
                   type="number"
+                  placeholder="Total Volume"
                   defaultValue={bulkValue.totalVolume}
                   onChange={(e) =>
                     setBulkValue({
                       ...bulkValue,
-                      totalVolume: e.target.value * 1000000,
+                      totalVolume: e.target.value * 1073741824,
                     })
                   }
-                  className="bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+                  className="w-full bg-transparent rounded-lg border border-primaryLight border-stroke px-3 py-2 outline-none"
                 />
               </div>
-              {/* <div className="col-span-1">
-                <label className="mb-1 block font-bold">MB</label>
-                <input
-                  type="number"
-                  defaultValue={bulkValue.totalVolume * 1000}
-                  onChange={(e) =>
-                    setBulkValue({
-                      ...bulkValue,
-                      totalVolume: e.target.value,
-                    })
-                  }
-                  className="bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-                />
-              </div>
-              <div className="col-span-1">
-                <label className="mb-1 block font-bold">KB</label>
-                <input
-                  type="number"
-                  defaultValue={bulkValue.totalVolume * 1000000}
-                  onChange={(e) =>
-                    setBulkValue({
-                      ...bulkValue,
-                      totalVolume: e.target.value,
-                    })
-                  }
-                  className="bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-                />
-              </div> */}
+              {bulkValue.totalVolume || bulkValue.totalVolume > 0 ? (
+                <div className="w-1/2 flex flex-col justify-between gap-2 text-gray-400">
+                  <p>
+                    MB:{" "}
+                    <span>
+                      {(bulkValue.totalVolume / 1000).toLocaleString()}
+                    </span>
+                  </p>
+                  <p>
+                    KB: <span>{bulkValue.totalVolume.toLocaleString()}</span>
+                  </p>
+                </div>
+              ) : null}
             </div>
           </div>
 
           {/* this is a gap */}
-          <div className="h-[1px] bg-primaryLight my-4 rounded"></div>
+          <div className="h-[1px] bg-primaryLight my-6 rounded"></div>
 
           <div>
             <label className="mt-2 mb-1 block font-bold">
@@ -286,7 +275,7 @@ export const CreatPeersSectionAddBulkForm = () => {
           </div>
 
           {/* this is a gap */}
-          <div className="h-[1px] bg-primaryLight my-4 rounded"></div>
+          <div className="h-[1px] bg-primaryLight my-6 rounded"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>

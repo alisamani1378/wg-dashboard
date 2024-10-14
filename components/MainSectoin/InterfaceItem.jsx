@@ -3,10 +3,10 @@ import { UpdateConfigurationStatus } from "@/api/interface";
 import Link from "next/link";
 import { useState } from "react";
 import {
-  BsChevronRight,
-  BsArrowDownUp,
   BsArrowDown,
+  BsArrowDownUp,
   BsArrowUp,
+  BsChevronRight,
 } from "react-icons/bs";
 
 export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
@@ -30,7 +30,7 @@ export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
   return (
     <div className="w-full my-4 border-2 border-primaryLight rounded hover:rounded-lg hover:border-blue-400 overflow-hidden transition-all duration-150">
       <Link
-        href={`configuration/${name}`}
+        href={`/configuration/${name}`}
         className="p-4 border-b-2 border-b-primaryLight flex justify-between items-center hover:bg-[#141414]"
       >
         <div className="">
@@ -66,11 +66,9 @@ export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
-            disable={ChangeStatusLoading}
-            checked={status === "disabled" ? false : true}
-            className={`toggle toggle-sm ${
-              status === "disabled" ? "toggle-error" : "toggle-success"
-            }`}
+            disabled={ChangeStatusLoading}
+            checked={status !== "disabled"}
+            className={`toggle toggle-sm checked:toggle-success`}
             onChange={ChangeStatus}
           />
           <span>{status === "disabled" ? "OFF" : "ON"}</span>
