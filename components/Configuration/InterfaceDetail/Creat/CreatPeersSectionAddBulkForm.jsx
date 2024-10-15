@@ -217,7 +217,7 @@ export const CreatPeersSectionAddBulkForm = () => {
                   onChange={(e) =>
                     setBulkValue({
                       ...bulkValue,
-                      totalVolume: e.target.value * 1024 * 1024,
+                      totalVolume: e.target.value * 1024 * 1024 * 1024,
                     })
                   }
                   className="w-full bg-transparent rounded-lg border border-primaryLight border-stroke px-3 py-2 outline-none"
