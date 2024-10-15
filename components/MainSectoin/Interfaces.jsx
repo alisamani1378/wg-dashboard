@@ -32,7 +32,7 @@ export const Interfaces = () => {
   return (
     <>
       {loading ? (
-        <div className="w-full flex justify-center items-center h-[600px]">
+        <div className="w-full flex justify-center items-center h-[360px]">
           <ScaleLoader color="#fff" />
         </div>
       ) : (

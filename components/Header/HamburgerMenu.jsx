@@ -1,49 +1,40 @@
-"use client";
-import { BsList } from "react-icons/bs";
-import { useEffect, useState } from "react";
-import { Sidebar } from "@/components/Sidebar/Sidebar";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { AlignRight, CirclePlus, House } from "lucide-react";
+import Link from "next/link";
 
 export const HamburgerMenu = () => {
-  const [showSideBar, setShowSideBar] = useState(false);
-
-  const handleOpenModal = () => {
-    setShowSideBar(true);
-    document.getElementById("my_modal_2").showModal();
-  };
-
-  const handleCloseModal = () => {
-    setShowSideBar(false);
-    document.getElementById("my_modal_2").close();
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        handleCloseModal();
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
     <>
-      <button
-        className="block md:hidden btn !w-[38px] !min-h-[38px] h-[38px] !bg-transparent !text-secondary !p-1 cursor-pointer border border-transparent  hover:border hover:border-secondary hover:rounded-xl transition-all duration-200"
-        onClick={handleOpenModal}
-      >
-        <BsList className="text-[28px] md:hidden" />
-      </button>
-      <dialog id="my_modal_2" className="modal">
-        <div className="modal-box min-h-[480px] !bg-secondary">
-          <Sidebar visible={showSideBar} closeModal={handleCloseModal} />
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button onClick={handleCloseModal}>close</button>
-        </form>
-      </dialog>
+      <Dialog>
+        <DialogTrigger>
+          <AlignRight />
+        </DialogTrigger>
+        <DialogContent className="!bg-secondary pt-12 [&>button]:text-primary">
+          <DialogClose asChild>
+            <Link
+              href={"/"}
+              className="w-full flex items-center gap-3 bg-primary px-4 py-3 rounded-lg hover:bg-primary/90"
+            >
+              <House size={18} />
+              Home
+            </Link>
+          </DialogClose>
+          <DialogClose asChild>
+            <Link
+              href={"/configuration"}
+              className="w-full flex items-center gap-3 bg-primary px-4 py-3 rounded-lg hover:bg-primary/90"
+            >
+              <CirclePlus size={18} />
+              Add Configuration
+            </Link>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
