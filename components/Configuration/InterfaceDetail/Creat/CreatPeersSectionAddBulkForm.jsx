@@ -23,7 +23,7 @@ export const CreatPeersSectionAddBulkForm = () => {
     persistentKeepalive: 21,
     endpointAllowedIPs: "0.0.0.0/0",
     expireTime: 0,
-    totalVolume: 104857600,
+    totalVolume: 0,
     status: "onhold",
     onHoldExpireDurection: 0,
   });
@@ -211,12 +211,13 @@ export const CreatPeersSectionAddBulkForm = () => {
                 <label className="mb-1 block font-bold">GB</label>
                 <input
                   type="number"
+                  step="any"
                   placeholder="Total Volume"
                   defaultValue={bulkValue.totalVolume}
                   onChange={(e) =>
                     setBulkValue({
                       ...bulkValue,
-                      totalVolume: e.target.value * 1073741824,
+                      totalVolume: e.target.value * 1024 * 1024,
                     })
                   }
                   className="w-full bg-transparent rounded-lg border border-primaryLight border-stroke px-3 py-2 outline-none"
@@ -227,14 +228,11 @@ export const CreatPeersSectionAddBulkForm = () => {
                   <p>
                     MB:{" "}
                     <span>
-                      {(bulkValue.totalVolume / 1000000).toLocaleString()}
+                      {(bulkValue.totalVolume / 1024).toLocaleString()}
                     </span>
                   </p>
                   <p>
-                    KB:{" "}
-                    <span>
-                      {(bulkValue.totalVolume / 1000).toLocaleString()}
-                    </span>
+                    KB: <span>{bulkValue.totalVolume.toLocaleString()}</span>
                   </p>
                 </div>
               ) : null}
