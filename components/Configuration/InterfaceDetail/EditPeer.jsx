@@ -142,8 +142,7 @@ export const EditPeer = ({ EditPeerData }) => {
           />
         </div>
         <div className="flex justify-end mt-2">
-          <Button>
-            {" "}
+          <Button disabled={submitLoading}>
             Edit <BsFillSaveFill />
           </Button>
         </div>

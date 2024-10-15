@@ -1,17 +1,40 @@
 "use client";
-import {
-  BsArrowRepeat,
-  BsPlus,
-  BsChevronDown,
-  BsFillPlusCircleFill,
-} from "react-icons/bs";
+import { BsArrowRepeat, BsFillPlusCircleFill, BsPlus } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import Button from "@/components/common/Button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+import { GetIpAddress } from "@/api/IpAddress";
+import { usePathname } from "next/navigation";
 
 export const CreatPeersSectionOptionalForm = () => {
+  const [optionalPeerValue, setOptionalPeerValue] = useState({
+    name: "",
+    publicKey: "",
+    presharedKey: "",
+    allowedIPs: [""],
+    endPoint: "",
+    bulk: false,
+    count: 0,
+    dns: "8.8.8.8,4.2.2.4",
+    mtu: 1420,
+    persistentKeepalive: 21,
+    endpointAllowedIPs: "0.0.0.0/0",
+    expireTime: 0,
+    totalVolume: 0,
+    status: "",
+    onHoldExpireDurection: 0,
+  });
+  const [interfaceIpAdresses, setInterfaceIpAdresses] = useState([]);
   const [peerValue, setPeerValue] = useState({ privateKey: "", publicKey: "" });
+
+  const pathname = usePathname();
 
   //   generateKeys for publicKey and privateKey
   const generateKeys = () => {
@@ -28,8 +51,16 @@ export const CreatPeersSectionOptionalForm = () => {
     });
   };
 
+  const fetchInterFaceIpAdresses = async () => {
+    await GetIpAddress(pathname.split("/")[2]).then((res) => {
+      console.log(res);
+      setInterfaceIpAdresses(res.data.sort((a, b) => a.id - b.id));
+    });
+  };
+
   useEffect(() => {
     generateKeys();
+    fetchInterFaceIpAdresses();
   }, []);
 
   return (
@@ -39,6 +70,7 @@ export const CreatPeersSectionOptionalForm = () => {
           <label className="mb-2 block font-bold">Name</label>
           <input
             type="text"
+            name={optionalPeerValue.name}
             className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
           />
         </div>
@@ -85,10 +117,11 @@ export const CreatPeersSectionOptionalForm = () => {
               &#x0028;Required&#x0029;
             </span>
           </label>
-          <div className="w-full md:flex justify-between items-center">
+          <div className="w-full flex flex-col md:flex-row gap-3">
             <div className="flex-1 flex items-center">
               <input
                 type="text"
+                name={optionalPeerValue.allowedIPs}
                 placeholder="Enter IP Address/CIDR"
                 className="w-full bg-transparent rounded-l-lg border border-r-0 border-[#666666] border-stroke px-3 py-2 outline-none"
               />
@@ -96,25 +129,30 @@ export const CreatPeersSectionOptionalForm = () => {
                 <BsPlus className="text-[20px]" />
               </span>
             </div>
-            <span className="hidden md:block mx-2">Or</span>
-            <div className="w-full md:w-fit flex justify-end mt-4 md:mt-0">
-              <details className="dropdown dropdown-end ">
-                <summary className="btn btn-sm bg-[#707070] text-white border-none hover:!bg-[#707070]">
-                  Pick Available IP
-                  <BsChevronDown />
-                </summary>
-                <ul className="menu dropdown-content bg-[#B8B8B8] text-[#525252] h-[200px] rounded-box z-[1] w-52 p-2 shadow">
-                  <li className="rounded-xl">
-                    <a>Item 1</a>
-                  </li>
-                  <li>
-                    <a>Item 2</a>
-                  </li>
-                </ul>
-              </details>
+            <div className="w-[240px] whitespace-nowrap flex justify-end mt-2 md:mt-0">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="w-full bg-secondary text-primary px-2 py-1 flex items-center justify-between gap-3 rounded !outline-none">
+                  Allowed IPs
+                  <ChevronDown size={18} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[240px] max-h-[280px] bg-secondary overflow-y-auto">
+                  {interfaceIpAdresses?.map((ip) => (
+                    <div
+                      className="w-full py-1 px-2 rounded hover:bg-primaryLight/80 cursor-pointer"
+                      key={ip?.id}
+                    >
+                      {ip?.ip}
+                    </div>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
+
+        {/* this is a gap */}
+        <div className="h-[1px] bg-primaryLight my-6 rounded"></div>
+
         <div>
           <label className="mb-2 block font-bold">
             Endpoint Allowed IPs{" "}
@@ -138,7 +176,7 @@ export const CreatPeersSectionOptionalForm = () => {
         </div>
 
         {/* this is a gap */}
-        <div className="h-[1px] bg-primaryLight my-4 rounded"></div>
+        <div className="h-[1px] bg-primaryLight my-6 rounded"></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="col-span-1">

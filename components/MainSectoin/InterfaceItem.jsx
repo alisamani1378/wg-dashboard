@@ -9,6 +9,8 @@ import {
   BsChevronRight,
 } from "react-icons/bs";
 
+import { Switch } from "@/components/ui/switch";
+
 export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
   const { name, peers, privateKey, status } = interfaceDetail;
 
@@ -21,7 +23,7 @@ export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
       name: interfaceDetail.name,
     };
     await UpdateConfigurationStatus(ChangeStatusValue)
-      .then(async (res) => {
+      .then(async () => {
         await reFetch();
       })
       .finally(() => setChangeStatusLoading(false));
@@ -64,14 +66,22 @@ export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
+          <Switch
             disabled={ChangeStatusLoading}
             checked={status !== "disabled"}
-            className={`toggle toggle-sm checked:toggle-success`}
-            onChange={ChangeStatus}
+            onCheckedChange={ChangeStatus}
+            className={`${status !== "disabled" && "!bg-green-500"}`}
           />
-          <span>{status === "disabled" ? "OFF" : "ON"}</span>
+          {/*<input*/}
+          {/*  type="checkbox"*/}
+          {/*  disabled={ChangeStatusLoading}*/}
+          {/*  checked={status !== "disabled"}*/}
+          {/*  className={`toggle toggle-sm checked:toggle-success`}*/}
+          {/*  onChange={ChangeStatus}*/}
+          {/*/>*/}
+          <span className="font-bold">
+            {status === "disabled" ? "OFF" : "ON"}
+          </span>
         </div>
       </div>
     </div>

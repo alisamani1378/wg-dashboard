@@ -1,4 +1,4 @@
-import client from "../libs/axios";
+import client from "../lib/axios";
 
 const GetPeer = async (query) => {
   const { data } = await client.get(`/Peer${query}`);

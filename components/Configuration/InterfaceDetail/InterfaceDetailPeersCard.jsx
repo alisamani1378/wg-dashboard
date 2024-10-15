@@ -12,9 +12,11 @@ import {
 } from "react-icons/bs";
 import { QRCodeSVG } from "qrcode.react";
 import { EditPeer } from "@/components/Configuration/InterfaceDetail/EditPeer";
+import { ScaleLoader } from "react-spinners";
 
 export const InterfaceDetailPeersCard = ({ peerDetail }) => {
-  const { name, allowedIPs, publicKey, status } = peerDetail;
+  const { name, allowedIPs, publicKey, status, uploadVolume, downloadVolume } =
+    peerDetail;
   const [peerConfig, setPeerConfig] = useState();
   const [modalLoading, setModalLoading] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
@@ -29,6 +31,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
         console.log(err);
       });
   };
+  console.log(peerDetail);
 
   const handleOpenQrCodeModal = async (name) => {
     console.log(modalFor);
@@ -60,15 +63,15 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
         <span
           className={`w-fit h-fit text-[12px] px-1 py-0.5 rounded ${
             status === "onhold"
-              ? "bg-yellow-500"
+              ? "bg-yellow-700"
               : status === "active"
-                ? "bg-green-500"
+                ? "bg-green-700"
                 : status === "expired"
-                  ? "bg-red-500"
+                  ? "bg-red-700"
                   : status === "limited"
-                    ? "bg-blue-500"
+                    ? "bg-blue-700"
                     : status === "disabled"
-                      ? "bg-indigo-500"
+                      ? "bg-indigo-700"
                       : null
           }`}
         >
@@ -89,12 +92,12 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
         <div className="col-start-2 col-end-5 xl:col-start-3 flex items-center justify-between">
           <div className="w-full flex items-center justify-center gap-1 text-blue-600 text-sm">
             <BsArrowDown />
-            <span>0.00000</span>
+            <span>{(downloadVolume / (1024 * 1024 * 1024)).toFixed(5)}</span>
             <span>GB</span>
           </div>
           <div className="w-full flex items-center justify-center gap-1 text-green-600 text-sm">
             <BsArrowUp />
-            <span>0.00000</span>
+            <span>{(uploadVolume / (1024 * 1024 * 1024)).toFixed(5)}</span>
             <span>GB</span>
           </div>
         </div>
@@ -165,12 +168,24 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
                 </form>
                 {modalLoading ? (
                   <>
-                    <div>loading...</div>
+                    <div className="w-full h-[240px] flex items-center justify-center">
+                      <ScaleLoader />
+                    </div>
                   </>
                 ) : (
                   <>
                     {modalFor === "qrcode" ? (
-                      <QRCodeSVG value={peerConfig} size={256} level={"H"} />
+                      <div className="w-full">
+                        <p className="text-left text-lg font-bold mb-5">
+                          Qr Code
+                        </p>
+                        <QRCodeSVG
+                          value={peerConfig}
+                          size={256}
+                          level={"H"}
+                          className="mx-auto"
+                        />
+                      </div>
                     ) : modalFor === "edit_peer" ? (
                       <EditPeer EditPeerData={peerDetail} />
                     ) : null}

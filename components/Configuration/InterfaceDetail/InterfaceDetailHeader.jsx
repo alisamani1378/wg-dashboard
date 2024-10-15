@@ -15,6 +15,7 @@ import { GetInterfaceByName, UpdateConfigurationStatus } from "@/api/interface";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ScaleLoader } from "react-spinners";
+import { Switch } from "@/components/ui/switch";
 
 export const InterfaceDetailHeader = ({ interfaceId }) => {
   const [interFaceDataLoading, setInterFaceDataLoading] = useState(true);
@@ -88,13 +89,19 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
         <div className="w-[132px] flex justify-between items-center px-5 py-2 border border-primaryLight rounded">
           <div>
             <p>Status</p>
-            <input
-              type="checkbox"
+            <Switch
               disabled={changeInterFaceStatus}
               checked={status !== "disabled"}
-              onChange={handleChangeStatusWithInterFaceName}
-              className="toggle toggle-sm checked:toggle-success mt-2"
+              onCheckedChange={handleChangeStatusWithInterFaceName}
+              className={`mt-1 ${status !== "disabled" && "!bg-green-500"}`}
             />
+            {/*<input*/}
+            {/*  type="checkbox"*/}
+            {/*  disabled={changeInterFaceStatus}*/}
+            {/*  checked={status !== "disabled"}*/}
+            {/*  onChange={handleChangeStatusWithInterFaceName}*/}
+            {/*  className="toggle toggle-sm checked:toggle-success mt-2"*/}
+            {/*/>*/}
           </div>
           <div>
             <span className="w-3 h-3 bg-white rounded-full flex justify-center items-center">

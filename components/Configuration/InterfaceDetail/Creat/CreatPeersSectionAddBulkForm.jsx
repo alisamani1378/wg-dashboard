@@ -23,7 +23,7 @@ export const CreatPeersSectionAddBulkForm = () => {
     persistentKeepalive: 21,
     endpointAllowedIPs: "0.0.0.0/0",
     expireTime: 0,
-    totalVolume: 0,
+    totalVolume: 104857600,
     status: "onhold",
     onHoldExpireDurection: 0,
   });
