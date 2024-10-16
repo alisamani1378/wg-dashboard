@@ -86,10 +86,14 @@ export const CreatPeersSectionOptionalForm = () => {
     const { ip, available } = ipAdress;
     if (available) {
       if (ip && !optionalPeerValue.allowedIPs.includes(ip)) {
-        setOptionalPeerValue((prevState) => ({
-          ...prevState,
-          allowedIPs: [...prevState.allowedIPs, ip],
-        }));
+        setOptionalPeerValue({
+          ...optionalPeerValue,
+          allowedIPs: [...optionalPeerValue.allowedIPs, ip],
+        });
+        // setOptionalPeerValue((prevState) => ({
+        //   ...prevState,
+        //   allowedIPs: [...prevState.allowedIPs, ip],
+        // }));
       }
     } else {
       toast.error("Please Enter Valid IP");
@@ -103,15 +107,14 @@ export const CreatPeersSectionOptionalForm = () => {
     }));
   };
 
-  const handleManualInputChange = (e) => {
+  const handleManualInputChange = () => {
     const ipRegex =
       /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/([0-9]|[1-2][0-9]|3[0-2]))?$/;
-    e.preventDefault();
     if (ipRegex.test(allowedIPInputValue.trim())) {
-      handleAddIP(allowedIPInputValue);
+      handleAddIP({ ip: allowedIPInputValue, available: true });
       setAllowedIPInputValue("");
     } else {
-      toast.error("Enter Valid IP address");
+      toast.error("Please Enter Valid IP");
     }
   };
 
@@ -232,7 +235,7 @@ export const CreatPeersSectionOptionalForm = () => {
                       {interfaceIpAdresses?.map((ip) => {
                         return (
                           <div
-                            className={`w-full py-1 px-2 rounded cursor-pointer flex items-center justify-between transition-all duration-100 ${
+                            className={`w-full py-1 px-2 rounded cursor-pointer flex items-center justify-between ${
                               ip?.available
                                 ? "bg-green-800/20 backdrop-blur hover:bg-green-800/40"
                                 : "bg-[#E04000]/20 backdrop-blur hover:bg-[#E04000]/40"

@@ -2,28 +2,26 @@
 import { useState } from "react";
 import { CreatPeersSectionAddBulkForm } from "./CreatPeersSectionAddBulkForm";
 import { CreatPeersSectionOptionalForm } from "./CreatPeersSectionOptionalForm";
+import { Switch } from "@/components/ui/switch";
 
 export const CreatPeersSection = () => {
   const [isCheckBulkAdd, setIsCheckBulkAdd] = useState(true);
 
   return (
     <>
-      <div className="my-8">
-        <label className="label cursor-pointer justify-normal gap-6">
-          <input
-            type="checkbox"
-            value={isCheckBulkAdd}
-            onChange={() => setIsCheckBulkAdd((prev) => !prev)}
-            className="toggle toggle-sm checked:border-blue-500 checked:bg-blue-500  checked:hover:bg-blue-700"
-          />
-          <span className="label-text font-semibold text-white">Bulk Add</span>
-        </label>
-        <p className="text-sm text-secondary">
-          By adding peers by bulk, each peer&apos;s name will be auto generated,
-          and Allowed IP will be assign to the next available IP.
-        </p>
-      </div>
-      {!isCheckBulkAdd ? (
+      <label className="w-fit flex items-center cursor-pointer justify-normal gap-6 pt-6 pb-3">
+        <Switch
+          checked={isCheckBulkAdd}
+          onCheckedChange={setIsCheckBulkAdd}
+          className={`!bg-primaryLight ${isCheckBulkAdd && "!bg-[#E04000]"}`}
+        />
+        <span className="text-[16px] font-semibold text-white">Bulk Add</span>
+      </label>
+      <p className="text-sm text-secondary pb-6">
+        By adding peers by bulk, each peer&apos;s name will be auto generated,
+        and Allowed IP will be assign to the next available IP.
+      </p>
+      {isCheckBulkAdd ? (
         <>
           <CreatPeersSectionAddBulkForm />
         </>

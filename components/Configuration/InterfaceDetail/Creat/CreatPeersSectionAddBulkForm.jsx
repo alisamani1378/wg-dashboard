@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 import { PostPeerInterface } from "@/api/peer";
+import { Switch } from "@/components/ui/switch";
 
 export const CreatPeersSectionAddBulkForm = () => {
   const [bulkValue, setBulkValue] = useState({
@@ -162,12 +163,13 @@ export const CreatPeersSectionAddBulkForm = () => {
                   <span className="label-text font-semibold text-gray-500">
                     On Hold
                   </span>
-                  <input
-                    type="checkbox"
+                  <Switch
                     checked={changeOnHoldAndActiveData}
                     value={changeOnHoldAndActiveData}
-                    onChange={handleChangeOnHoldActive}
-                    className="toggle toggle-sm checked:toggle-success"
+                    onCheckedChange={handleChangeOnHoldActive}
+                    className={`!bg-primaryLight ${
+                      changeOnHoldAndActiveData && "!bg-[#00a96e]"
+                    }`}
                   />
                   <span className="label-text font-semibold text-[#00a96e]">
                     Active

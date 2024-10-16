@@ -72,13 +72,6 @@ export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
             onCheckedChange={ChangeStatus}
             className={`${status !== "disabled" && "!bg-green-500"}`}
           />
-          {/*<input*/}
-          {/*  type="checkbox"*/}
-          {/*  disabled={ChangeStatusLoading}*/}
-          {/*  checked={status !== "disabled"}*/}
-          {/*  className={`toggle toggle-sm checked:toggle-success`}*/}
-          {/*  onChange={ChangeStatus}*/}
-          {/*/>*/}
           <span className="font-bold">
             {status === "disabled" ? "OFF" : "ON"}
           </span>

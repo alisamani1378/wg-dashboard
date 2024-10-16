@@ -25,7 +25,7 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
 
   const router = useRouter();
 
-  const fetchInterFaceByName = async () => {
+  useEffect(() => {
     GetInterfaceByName(interfaceId)
       .then((res) => {
         const { isSuccess, data, message } = res;
@@ -40,11 +40,7 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
       .finally(() => {
         setInterFaceDataLoading(false);
       });
-  };
-
-  useEffect(() => {
-    fetchInterFaceByName();
-  }, []);
+  }, [interfaceId]);
 
   useEffect(() => {
     setInterfaceName(interfaceId);
@@ -52,8 +48,8 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
 
   const name = interFaceData?.name;
   const status = interFaceData?.status;
-  const totoalDataUsed = interFaceData?.totoalDataUsed / 1073741824;
-  const totalData = interFaceData?.totalData / 1073741824;
+  const totoalDataUsed = interFaceData?.totoalDataUsed / (1024 * 1024 * 1024);
+  const totalData = interFaceData?.totalData / (1024 * 1024 * 1024);
 
   const handleChangeStatusWithInterFaceName = async () => {
     setChangeInterFaceStatus(true);
@@ -62,7 +58,7 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
       name: name,
     };
     await UpdateConfigurationStatus(ChangeStatusValue)
-      .then((res) => {
+      .then(() => {
         window.location.reload();
         setChangeInterFaceStatus(false);
       })
@@ -95,13 +91,6 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
               onCheckedChange={handleChangeStatusWithInterFaceName}
               className={`mt-1 ${status !== "disabled" && "!bg-green-500"}`}
             />
-            {/*<input*/}
-            {/*  type="checkbox"*/}
-            {/*  disabled={changeInterFaceStatus}*/}
-            {/*  checked={status !== "disabled"}*/}
-            {/*  onChange={handleChangeStatusWithInterFaceName}*/}
-            {/*  className="toggle toggle-sm checked:toggle-success mt-2"*/}
-            {/*/>*/}
           </div>
           <div>
             <span className="w-3 h-3 bg-white rounded-full flex justify-center items-center">
