@@ -16,8 +16,10 @@ import {
   Plus,
   Repeat,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { GetIpAddress } from "@/api/IpAddress";
+import toast from "react-hot-toast";
+import { PostPeerInterface } from "@/api/peer";
 
 export const CreatPeersSectionOptionalForm = () => {
   const [optionalPeerValue, setOptionalPeerValue] = useState({
@@ -39,6 +41,9 @@ export const CreatPeersSectionOptionalForm = () => {
   });
   const [interfaceIpAdresses, setInterfaceIpAdresses] = useState([]);
   const [allowedIPInputValue, setAllowedIPInputValue] = useState("");
+  const [submitLoading, setSubmitLoading] = useState(false);
+
+  const router = useRouter();
 
   const pathname = usePathname();
 
@@ -64,7 +69,6 @@ export const CreatPeersSectionOptionalForm = () => {
 
   useLayoutEffect(() => {
     GetIpAddress(pathname.split("/")[2]).then((res) => {
-      console.log(res);
       setInterfaceIpAdresses(res.data.sort((a, b) => a.id - b.id));
     });
   }, [pathname]);
@@ -78,12 +82,17 @@ export const CreatPeersSectionOptionalForm = () => {
     });
   };
 
-  const handleAddIP = (ip) => {
-    if (ip && !optionalPeerValue.allowedIPs.includes(ip)) {
-      setOptionalPeerValue((prevState) => ({
-        ...prevState,
-        allowedIPs: [...prevState.allowedIPs, ip],
-      }));
+  const handleAddIP = (ipAdress) => {
+    const { ip, available } = ipAdress;
+    if (available) {
+      if (ip && !optionalPeerValue.allowedIPs.includes(ip)) {
+        setOptionalPeerValue((prevState) => ({
+          ...prevState,
+          allowedIPs: [...prevState.allowedIPs, ip],
+        }));
+      }
+    } else {
+      toast.error("Please Enter Valid IP");
     }
   };
 
@@ -95,10 +104,14 @@ export const CreatPeersSectionOptionalForm = () => {
   };
 
   const handleManualInputChange = (e) => {
+    const ipRegex =
+      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/([0-9]|[1-2][0-9]|3[0-2]))?$/;
     e.preventDefault();
-    if (allowedIPInputValue.trim()) {
+    if (ipRegex.test(allowedIPInputValue.trim())) {
       handleAddIP(allowedIPInputValue);
       setAllowedIPInputValue("");
+    } else {
+      toast.error("Enter Valid IP address");
     }
   };
 
@@ -109,11 +122,35 @@ export const CreatPeersSectionOptionalForm = () => {
     }));
   };
 
-  console.log(optionalPeerValue);
+  const submitOptoinalPeerForm = async (e) => {
+    e.preventDefault();
+    const { name, allowedIPs } = optionalPeerValue;
+    if (!name) return toast.error("Name is required");
+    if (allowedIPs.length === 0) return toast.error("Allowed IPs");
+    console.log(optionalPeerValue);
+
+    setSubmitLoading(true);
+    const InterfaceName = pathname.split("/")[2];
+    await PostPeerInterface(InterfaceName, {
+      ...optionalPeerValue,
+    })
+      .then((res) => {
+        const { isSuccess } = res;
+        if (isSuccess) {
+          toast.success(res.message);
+          router.push(`/configuration/${InterfaceName}`);
+        } else {
+          toast.error(res.message);
+        }
+      })
+      .finally(() => {
+        setSubmitLoading(false);
+      });
+  };
 
   return (
     <>
-      <form className="flex flex-col gap-3">
+      <form onSubmit={submitOptoinalPeerForm} className="flex flex-col gap-3">
         <div>
           <label className="mb-2 block font-bold">Name</label>
           <input
@@ -182,25 +219,31 @@ export const CreatPeersSectionOptionalForm = () => {
                 <Plus size={20} />
               </span>
             </div>
-            <div className="w-[240px] whitespace-nowrap flex justify-end mt-2 md:mt-0">
+            <div className="w-[240px] min-h-[42px] whitespace-nowrap mt-2 md:mt-0">
               <DropdownMenu>
-                <DropdownMenuTrigger className="w-full bg-secondary text-primary px-2 py-1 flex items-center justify-between gap-3 rounded !outline-none">
+                <DropdownMenuTrigger className="w-full h-full bg-secondary text-primary px-2 py-1 flex items-center justify-between gap-3 rounded !outline-none">
                   Allowed IPs
                   <ChevronDown size={18} />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[240px] max-h-[280px] bg-secondary overflow-y-auto">
+                <DropdownMenuContent className="w-[240px] max-h-[280px] bg-secondary overflow-y-auto flex flex-col gap-0.5">
                   {interfaceIpAdresses.length > 0 ? (
                     <>
                       {" "}
-                      {interfaceIpAdresses?.map((ip) => (
-                        <div
-                          className="w-full py-1 px-2 rounded hover:bg-primaryLight/80 cursor-pointer flex items-center justify-between"
-                          key={ip?.id}
-                          onClick={() => handleAddIP(ip?.ip)}
-                        >
-                          <span>{ip?.ip}</span>
-                        </div>
-                      ))}
+                      {interfaceIpAdresses?.map((ip) => {
+                        return (
+                          <div
+                            className={`w-full py-1 px-2 rounded cursor-pointer flex items-center justify-between transition-all duration-100 ${
+                              ip?.available
+                                ? "bg-green-800/20 backdrop-blur hover:bg-green-800/40"
+                                : "bg-[#E04000]/20 backdrop-blur hover:bg-[#E04000]/40"
+                            }`}
+                            key={ip?.id}
+                            onClick={() => handleAddIP(ip)}
+                          >
+                            <span>{ip?.ip}</span>
+                          </div>
+                        );
+                      })}
                     </>
                   ) : null}
                 </DropdownMenuContent>
@@ -209,23 +252,27 @@ export const CreatPeersSectionOptionalForm = () => {
           </div>
         </div>
         {optionalPeerValue.allowedIPs.length > 0 && (
-          <div className="flex items-center gap-2 p-3 border border-primaryLight rounded mt-3">
-            <div className="w-full flex items-center gap-2  overflow-x-auto scrollbar-hide">
+          <div className="w-full flex gap-2 p-3 border border-primaryLight rounded mt-3">
+            <div className="w-[100%_-_58px] flex-1 flex items-center flex-wrap gap-2">
               {optionalPeerValue.allowedIPs?.map((ip) => {
                 return (
                   <span
                     key={ip}
-                    className="bg-secondary/80 backdrop-blur px-3 py-1 rounded flex items-center gap-4"
+                    className="text-[14px] bg-secondary/80 backdrop-blur px-2 py-1 rounded flex items-center gap-4"
                   >
                     {ip}
-                    <CircleMinus size={16} onClick={() => handleDeleteIP(ip)} />
+                    <CircleMinus
+                      size={16}
+                      onClick={() => handleDeleteIP(ip)}
+                      className="text-[#E04000] cursor-pointer"
+                    />
                   </span>
                 );
               })}
             </div>
             <span
               onClick={handleClearAllIps}
-              className="group  bg-red-400 w-8 h-8 rounded-sm flex items-center justify-center cursor-pointer border border-transparent hover:border-secondary"
+              className="group bg-[#E04000] w-8 h-8 rounded-sm flex items-center justify-center cursor-pointer border border-transparent hover:border-secondary transition-all duration-100"
             >
               <Eraser size={16} className="group-hover:scale-[103%]" />
             </span>
@@ -298,7 +345,7 @@ export const CreatPeersSectionOptionalForm = () => {
         </div>
 
         <div className="flex justify-end mt-4">
-          <Button>
+          <Button disabled={submitLoading}>
             <CirclePlus size={16} />
             Add
           </Button>

@@ -45,7 +45,7 @@ export const CreatPeersSectionAddBulkForm = () => {
     });
   };
 
-  const handleChangeOnHoldActive = (e) => {
+  const handleChangeOnHoldActive = () => {
     setChangeOnHoldAndActiveData((prev) => !prev);
 
     setOnHoldDaysExpire(null);
@@ -124,7 +124,7 @@ export const CreatPeersSectionAddBulkForm = () => {
         const { isSuccess } = res;
         if (isSuccess) {
           toast.success(res.message);
-          router.back();
+          router.push(`/configuration/${InterfaceName}`);
         } else {
           toast.error(res.message);
         }
