@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { BsChevronLeft } from "react-icons/bs";
+import { ChevronLeft } from "lucide-react";
 
 export const CreatPeersHeader = () => {
   const router = useRouter();
@@ -10,7 +10,7 @@ export const CreatPeersHeader = () => {
       onClick={() => router.back()}
       className="w-fit flex items-center gap-4 justify-start text-[28px] font-bold cursor-pointer hover:text-secondary"
     >
-      <BsChevronLeft />
+      <ChevronLeft size={32} />
       Add Peers
     </div>
   );

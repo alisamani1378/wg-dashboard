@@ -39,7 +39,7 @@ export const Interfaces = () => {
         <>
           {interfaces ? (
             <>
-              {interfaces.map((item) => {
+              {interfaces?.map((item) => {
                 return (
                   <InterfaceItem
                     key={item.id}

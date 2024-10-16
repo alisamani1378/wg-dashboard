@@ -4,10 +4,16 @@ import { ConfigurationFormCard } from "@/components/Configuration/ConfigurationF
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { BsArrowRepeat, BsFillSaveFill } from "react-icons/bs";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import Button from "../common/Button";
+import { Import, Repeat } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export const ConfigurationForm = () => {
   const [configValue, setConfigValue] = useState({
@@ -122,7 +128,7 @@ export const ConfigurationForm = () => {
               onClick={generateKeys}
               className="h-[42px] flex justify-center items-center p-2 rounded-r-lg border border-[#666666] text-[#0d6efd] hover:bg-[#0d6efd] hover:text-white hover:border-white transition-all duration-100 cursor-pointer"
             >
-              <BsArrowRepeat className="text-[20px]" />
+              <Repeat size={20} />
             </span>
           </div>
         </div>
@@ -178,48 +184,50 @@ export const ConfigurationForm = () => {
       <div className="h-[2px] bg-primaryLight my-4 rounded"></div>
 
       {/* accordion for optional form */}
-      <div className="collapse collapse-arrow rounded border border-primaryLight">
-        <input type="checkbox" />
-        <div className="collapse-title text-xl font-medium bg-[#1F1F1F] collapse-close">
-          Optional Settings
-        </div>
-        <div className="collapse-content">
-          <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-            <ConfigurationFormCard title={"PreUp"}>
-              <input
-                type="number"
-                name="preUp"
-                onChange={handleConfigInputValue}
-                className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
-              />
-            </ConfigurationFormCard>
-            <ConfigurationFormCard title={"PreDown"}>
-              <input
-                type="number"
-                name="preDown"
-                onChange={handleConfigInputValue}
-                className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
-              />
-            </ConfigurationFormCard>
-            <ConfigurationFormCard title={"PostUp"}>
-              <input
-                type="number"
-                name="postUp"
-                onChange={handleConfigInputValue}
-                className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
-              />
-            </ConfigurationFormCard>
-            <ConfigurationFormCard title={"PostDown"}>
-              <input
-                type="number"
-                name="postDown"
-                onChange={handleConfigInputValue}
-                className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
-              />
-            </ConfigurationFormCard>
-          </div>
-        </div>
-      </div>
+      <Accordion type="single" collapsible>
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="bg-primaryLight text-xl px-4 rounded-t">
+            Optional Settings
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <ConfigurationFormCard title={"PreUp"}>
+                <input
+                  type="number"
+                  name="preUp"
+                  onChange={handleConfigInputValue}
+                  className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
+                />
+              </ConfigurationFormCard>
+              <ConfigurationFormCard title={"PreDown"}>
+                <input
+                  type="number"
+                  name="preDown"
+                  onChange={handleConfigInputValue}
+                  className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
+                />
+              </ConfigurationFormCard>
+              <ConfigurationFormCard title={"PostUp"}>
+                <input
+                  type="number"
+                  name="postUp"
+                  onChange={handleConfigInputValue}
+                  className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
+                />
+              </ConfigurationFormCard>
+              <ConfigurationFormCard title={"PostDown"}>
+                <input
+                  type="number"
+                  name="postDown"
+                  onChange={handleConfigInputValue}
+                  className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
+                />
+              </ConfigurationFormCard>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
       <div className="flex justify-end">
         <Button disabled={submitLoading}>
           Save Interface
@@ -227,7 +235,7 @@ export const ConfigurationForm = () => {
             <span>...</span>
           ) : (
             <>
-              <BsFillSaveFill />
+              <Import />
             </>
           )}
         </Button>

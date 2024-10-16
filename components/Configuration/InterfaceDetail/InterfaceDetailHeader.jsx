@@ -1,14 +1,14 @@
 "use client";
 import Link from "next/link";
 import { InterfaceDetailHeaderCard } from "./InterfaceDetailHeaderCard";
-import {
-  BsArrowDown,
-  BsArrowDownUp,
-  BsArrowUp,
-  BsEthernet,
-  BsPlusLg,
-} from "react-icons/bs";
 import { useContext, useEffect, useState } from "react";
+import {
+  ArrowDownToDot,
+  ArrowUpDown,
+  ArrowUpFromDot,
+  EthernetPort,
+  Plus,
+} from "lucide-react";
 
 import InterfaceNameContext from "@/context/InterfaceNameContext";
 import { GetInterfaceByName, UpdateConfigurationStatus } from "@/api/interface";
@@ -28,11 +28,11 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
   useEffect(() => {
     GetInterfaceByName(interfaceId)
       .then((res) => {
-        const { isSuccess, data, message } = res;
-        if (isSuccess) {
+        const { isSuccess, data } = res;
+        if (isSuccess && data !== null) {
           setInterFaceData(data);
         } else {
-          toast.error(message);
+          toast.error("failed");
           router.push("/");
           setInterFaceDataLoading(false);
         }
@@ -107,27 +107,27 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
         <InterfaceDetailHeaderCard
           title={"Connected Peers"}
           amount={0}
-          icon={<BsEthernet className="text-[28px]" />}
+          icon={<EthernetPort size={28} />}
         />
         <InterfaceDetailHeaderCard
           title={"Total Usage"}
           amount={totalData.toFixed(4)}
           showGb
-          icon={<BsArrowDownUp className="text-[28px]" />}
+          icon={<ArrowUpDown size={28} />}
         />
         <InterfaceDetailHeaderCard
           title={"Total Received"}
           amount={totoalDataUsed.toFixed(4)}
           showGb
           amountColor={"blue"}
-          icon={<BsArrowDown className="text-[28px] text-blue-600" />}
+          icon={<ArrowDownToDot size={28} className="text-blue-600" />}
         />
         <InterfaceDetailHeaderCard
           title={"Total Sent"}
           amount={0}
           showGb
           amountColor={"green"}
-          icon={<BsArrowUp className="text-[28px] text-green-600" />}
+          icon={<ArrowUpFromDot size={28} className="text-green-600" />}
         />
       </div>
       {/* this is a gap */}
@@ -138,7 +138,7 @@ export const InterfaceDetailHeader = ({ interfaceId }) => {
           href={`/configuration/${interfaceId}/creat`}
           className="h-full flex items-center justify-center gap-2 py-3"
         >
-          <BsPlusLg />
+          <Plus />
           Peer
         </Link>
       </div>

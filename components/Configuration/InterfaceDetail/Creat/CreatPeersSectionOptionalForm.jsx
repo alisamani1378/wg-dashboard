@@ -12,6 +12,7 @@ import {
   ChevronDown,
   CircleMinus,
   CirclePlus,
+  Eclipse,
   Eraser,
   Plus,
   Repeat,
@@ -225,30 +226,26 @@ export const CreatPeersSectionOptionalForm = () => {
             <div className="w-[240px] min-h-[42px] whitespace-nowrap mt-2 md:mt-0">
               <DropdownMenu>
                 <DropdownMenuTrigger className="w-full h-full bg-secondary text-primary px-2 py-1 flex items-center justify-between gap-3 rounded !outline-none">
+                  <Eclipse size={18} />
                   Allowed IPs
                   <ChevronDown size={18} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[240px] max-h-[280px] bg-secondary overflow-y-auto flex flex-col gap-0.5">
-                  {interfaceIpAdresses.length > 0 ? (
-                    <>
-                      {" "}
-                      {interfaceIpAdresses?.map((ip) => {
-                        return (
-                          <div
-                            className={`w-full py-1 px-2 rounded cursor-pointer flex items-center justify-between ${
-                              ip?.available
-                                ? "bg-green-800/20 backdrop-blur hover:bg-green-800/40"
-                                : "bg-[#E04000]/20 backdrop-blur hover:bg-[#E04000]/40"
-                            }`}
-                            key={ip?.id}
-                            onClick={() => handleAddIP(ip)}
-                          >
-                            <span>{ip?.ip}</span>
-                          </div>
-                        );
-                      })}
-                    </>
-                  ) : null}
+                  {interfaceIpAdresses?.map((ip) => {
+                    return (
+                      <div
+                        className={`w-full py-1 px-2 rounded cursor-pointer flex items-center justify-between ${
+                          ip?.available
+                            ? "bg-green-800/20  hover:bg-green-800/40"
+                            : "bg-[#E04000]/20  hover:bg-[#E04000]/40"
+                        }`}
+                        key={ip?.id}
+                        onClick={() => handleAddIP(ip)}
+                      >
+                        <span>{ip?.ip}</span>
+                      </div>
+                    );
+                  })}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -261,13 +258,13 @@ export const CreatPeersSectionOptionalForm = () => {
                 return (
                   <span
                     key={ip}
-                    className="text-[14px] bg-secondary/80 backdrop-blur px-2 py-1 rounded flex items-center gap-4"
+                    className="text-[14px] bg-secondary/80 px-2 py-1 rounded flex items-center gap-4"
                   >
                     {ip}
                     <CircleMinus
                       size={16}
                       onClick={() => handleDeleteIP(ip)}
-                      className="text-[#E04000] cursor-pointer"
+                      className="text-[#E04000] cursor-pointer hover:fill-[#E04000] hover:text-primaryLight transition-all duration-100"
                     />
                   </span>
                 );

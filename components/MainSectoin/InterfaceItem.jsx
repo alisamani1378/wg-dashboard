@@ -3,11 +3,11 @@ import { UpdateConfigurationStatus } from "@/api/interface";
 import Link from "next/link";
 import { useState } from "react";
 import {
-  BsArrowDown,
-  BsArrowDownUp,
-  BsArrowUp,
-  BsChevronRight,
-} from "react-icons/bs";
+  ArrowDownToDot,
+  ArrowUpDown,
+  ArrowUpFromDot,
+  ChevronRight,
+} from "lucide-react";
 
 import { Switch } from "@/components/ui/switch";
 
@@ -39,17 +39,17 @@ export const InterfaceItem = ({ interfaceDetail, reFetch }) => {
           <span className="w-[6px] h-[6px] mr-2 bg-green-500 rounded-full animate-ping"></span>
           {name}
         </div>
-        <BsChevronRight />
+        <ChevronRight size={18} />
       </Link>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-[14px] px-4 py-4">
         <div className="col-span-1 flex items-center gap-1">
-          <BsArrowDownUp />1<span>GB</span>
+          <ArrowUpDown size={16} />1<span>GB</span>
         </div>
         <div className="col-span-1 flex items-center gap-1 text-blue-600">
-          <BsArrowDown />2<span>GB</span>
+          <ArrowDownToDot size={16} />2<span>GB</span>
         </div>
         <div className="col-span-1 flex items-center gap-1 text-green-600">
-          <BsArrowUp />3<span>GB</span>
+          <ArrowUpFromDot size={16} />3<span>GB</span>
         </div>
         <div className="col-span-1 flex items-center gap-1">
           <span className="w-[6px] h-[6px] mr-2 bg-green-400 rounded-full animate-ping"></span>

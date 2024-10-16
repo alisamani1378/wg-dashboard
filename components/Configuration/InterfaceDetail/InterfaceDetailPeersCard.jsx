@@ -1,18 +1,18 @@
 "use client";
 import { useState } from "react";
 import { GetPeerConfig } from "@/api/peer";
-import {
-  BsArrowDown,
-  BsArrowUp,
-  BsDownload,
-  BsPen,
-  BsQrCode,
-  BsShare,
-  BsThreeDots,
-} from "react-icons/bs";
 import { QRCodeSVG } from "qrcode.react";
 import { EditPeer } from "@/components/Configuration/InterfaceDetail/EditPeer";
 import { ScaleLoader } from "react-spinners";
+import {
+  ArrowDownToDot,
+  ArrowUpFromDot,
+  Download,
+  Ellipsis,
+  Pencil,
+  QrCode,
+  Share2,
+} from "lucide-react";
 
 export const InterfaceDetailPeersCard = ({ peerDetail }) => {
   const { name, allowedIPs, publicKey, status, uploadVolume, downloadVolume } =
@@ -31,7 +31,6 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
         console.log(err);
       });
   };
-  console.log(peerDetail);
 
   const handleOpenQrCodeModal = async (name) => {
     console.log(modalFor);
@@ -61,7 +60,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
     <>
       <div className="col-span-1 w-full h-[240px] grid grid-cols-4 grid-rows-4 p-2 border border-primaryLight rounded-md ">
         <span
-          className={`w-fit h-fit text-[12px] px-1 py-0.5 rounded ${
+          className={`w-fit h-fit text-[12px] text-white px-1 py-0.5 rounded ${
             status === "onhold"
               ? "bg-yellow-700"
               : status === "active"
@@ -91,12 +90,12 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
         </span>
         <div className="col-start-2 col-end-5 xl:col-start-3 flex items-center justify-between">
           <div className="w-full flex items-center justify-center gap-1 text-blue-600 text-sm">
-            <BsArrowDown />
+            <ArrowDownToDot size={16} />
             <span>{(downloadVolume / (1024 * 1024 * 1024)).toFixed(5)}</span>
             <span>GB</span>
           </div>
           <div className="w-full flex items-center justify-center gap-1 text-green-600 text-sm">
-            <BsArrowUp />
+            <ArrowUpFromDot size={16} />
             <span>{(uploadVolume / (1024 * 1024 * 1024)).toFixed(5)}</span>
             <span>GB</span>
           </div>
@@ -118,7 +117,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
             role="button"
             className="btn btn-sm m-1 bg-transparent hover:bg-primaryLight text-secondary"
           >
-            <BsThreeDots />
+            <Ellipsis />
           </div>
           <ul
             tabIndex={0}
@@ -126,7 +125,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
           >
             <li className="w-full !bg-transparent grid grid-cols-3 gap-2">
               <span className="btn w-full !min-h-[32px] !h-[32px] p-1">
-                <BsDownload />
+                <Download size={18} />
               </span>
               <span
                 onClick={() => {
@@ -135,10 +134,10 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
                 }}
                 className="btn w-full !min-h-[32px] !h-[32px] p-1"
               >
-                <BsQrCode />
+                <QrCode size={18} />
               </span>
               <span className="btn w-full !min-h-[32px] !h-[32px] p-1">
-                <BsShare />
+                <Share2 size={18} />
               </span>
             </li>
             <li className="w-full bg-transparent">
@@ -149,7 +148,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
                 }}
                 className="btn w-full !min-h-[32px] !h-[32px] p-1 "
               >
-                Edit <BsPen />
+                Edit <Pencil size={18} />
               </span>
             </li>
           </ul>

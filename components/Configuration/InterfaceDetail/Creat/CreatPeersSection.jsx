@@ -5,7 +5,7 @@ import { CreatPeersSectionOptionalForm } from "./CreatPeersSectionOptionalForm";
 import { Switch } from "@/components/ui/switch";
 
 export const CreatPeersSection = () => {
-  const [isCheckBulkAdd, setIsCheckBulkAdd] = useState(true);
+  const [isCheckBulkAdd, setIsCheckBulkAdd] = useState(false);
 
   return (
     <>

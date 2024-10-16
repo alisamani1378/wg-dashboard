@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { GetPeer } from "@/api/peer";
 import toast from "react-hot-toast";
 import { InterfaceDetailPeersCard } from "@/components/Configuration/InterfaceDetail/InterfaceDetailPeersCard";
-import { BsSearch } from "react-icons/bs";
-import { FaSortAmountDownAlt, FaSortAmountUp } from "react-icons/fa";
 import { usePathname } from "next/navigation";
+import { ArrowDownWideNarrow, ArrowUpNarrowWide, Search } from "lucide-react";
 
 export const InterfaceDetailPeers = () => {
   const [peers, setPeers] = useState();
@@ -99,8 +98,8 @@ export const InterfaceDetailPeers = () => {
                 placeholder="Search"
                 className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke pl-2 pr-12 py-2 outline-none "
               />
-              <button className="btn btn-square btn-outline btn-sm absolute right-2 top-[5px] bg-transparent hover:bg-primaryLight hover:text-secondary border !border-primaryLight text-primaryLight">
-                <BsSearch />
+              <button className="w-[32px] h-[32px] flex items-center justify-center absolute right-2 top-[5px] bg-transparent hover:bg-primaryLight hover:text-secondary border !border-primaryLight rounded-lg text-primaryLight transition-all duration-150">
+                <Search />
               </button>
             </form>
             <div className="flex items-center gap-2">
@@ -108,13 +107,13 @@ export const InterfaceDetailPeers = () => {
                 onClick={() => setFilter({ ...filter, Take: 20 })}
                 className="w-[42px] h-[42px] flex justify-center items-center bg-primaryLight border border-secondary rounded-lg hover:bg-primary cursor-pointer transition-all duration-75"
               >
-                <FaSortAmountDownAlt />
+                <ArrowDownWideNarrow />
               </span>
               <span
                 onClick={() => setFilter({ ...filter, Take: 40 })}
                 className="w-[42px] h-[42px] flex justify-center items-center bg-primaryLight border border-secondary rounded-lg hover:bg-primary cursor-pointer transition-all duration-75"
               >
-                <FaSortAmountUp />
+                <ArrowUpNarrowWide />
               </span>
             </div>
           </div>

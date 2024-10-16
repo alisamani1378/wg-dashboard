@@ -1,7 +1,6 @@
 "use client";
 import Button from "@/components/common/Button";
 import { ConfigurationFormCard } from "../../ConfigurationFormCard";
-import { BsFillPlusCircleFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,6 +8,7 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 import { PostPeerInterface } from "@/api/peer";
 import { Switch } from "@/components/ui/switch";
+import { CirclePlus } from "lucide-react";
 
 export const CreatPeersSectionAddBulkForm = () => {
   const [bulkValue, setBulkValue] = useState({
@@ -60,11 +60,6 @@ export const CreatPeersSectionAddBulkForm = () => {
       !changeOnHoldAndActiveData
     ) {
       const newOnHoldExpireDate = onHoldDaysExpire * 24 * 60 * 60;
-      // const currentDate = new Date();
-      // const newDate = new Date(
-      //   currentDate.getTime() + onHoldDaysExpire * 24 * 60 * 60 * 1000,
-      // );
-      // const onHoldExpireTime = Math.floor(newDate.getTime() / 1000);
 
       setBulkValue({
         ...bulkValue,
@@ -219,7 +214,9 @@ export const CreatPeersSectionAddBulkForm = () => {
                   onChange={(e) =>
                     setBulkValue({
                       ...bulkValue,
-                      totalVolume: e.target.value * 1024 * 1024 * 1024,
+                      totalVolume: Math.round(
+                        e.target.value * 1024 * 1024 * 1024,
+                      ),
                     })
                   }
                   className="w-full bg-transparent rounded-lg border border-primaryLight border-stroke px-3 py-2 outline-none"
@@ -230,11 +227,14 @@ export const CreatPeersSectionAddBulkForm = () => {
                   <p>
                     MB:{" "}
                     <span>
-                      {(bulkValue.totalVolume / 1024).toLocaleString()}
+                      {(bulkValue.totalVolume / (1024 * 1024)).toLocaleString()}
                     </span>
                   </p>
                   <p>
-                    KB: <span>{bulkValue.totalVolume.toLocaleString()}</span>
+                    KB:{" "}
+                    <span>
+                      {(bulkValue.totalVolume / 1024).toLocaleString()}
+                    </span>
                   </p>
                 </div>
               ) : null}
@@ -303,7 +303,7 @@ export const CreatPeersSectionAddBulkForm = () => {
           </div>
           <div className="flex justify-end mt-4">
             <Button disabled={submitLoading}>
-              <BsFillPlusCircleFill />
+              <CirclePlus size={18} />
               Add
             </Button>
           </div>

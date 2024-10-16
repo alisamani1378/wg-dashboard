@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button";
-import { BsFillSaveFill } from "react-icons/bs";
 import { UpdatePeerInterface } from "@/api/peer";
 import toast from "react-hot-toast";
+import { Import } from "lucide-react";
 
 export const EditPeer = ({ EditPeerData }) => {
   const {
@@ -43,7 +43,6 @@ export const EditPeer = ({ EditPeerData }) => {
       currentDate.getTime() + expireDays * 24 * 60 * 60 * 1000,
     );
     const newExpireDate = Math.floor(newDate.getTime() / 1000);
-    console.log(newExpireDate);
     setEditedPeerValue({ ...editedPeerValue, expireTime: newExpireDate });
   }, [expireDays]);
 
@@ -58,7 +57,7 @@ export const EditPeer = ({ EditPeerData }) => {
           toast.error(message);
         }
       })
-      .catch((er) => {
+      .catch(() => {
         toast.error("failed");
       })
       .finally(() => {
@@ -143,7 +142,7 @@ export const EditPeer = ({ EditPeerData }) => {
         </div>
         <div className="flex justify-end mt-2">
           <Button disabled={submitLoading}>
-            Edit <BsFillSaveFill />
+            Edit <Import />
           </Button>
         </div>
       </form>

@@ -14,7 +14,7 @@ export const HamburgerMenu = () => {
         <DialogTrigger className="md:hidden p-[6px] rounded border border-transparent hover:border-secondary hover:rounded-lg transition-all duration-200">
           <AlignRight />
         </DialogTrigger>
-        <DialogContent className="!bg-secondary pt-12 [&>button]:text-primary">
+        <DialogContent className="w-11/12 sm:max-w-md !bg-secondary pt-12 [&>button]:text-primary">
           <DialogClose asChild>
             <Link
               href={"/"}

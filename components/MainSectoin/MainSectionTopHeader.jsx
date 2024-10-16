@@ -15,7 +15,7 @@ export const MainSectionTopHeader = () => {
             href={"/configuration"}
             className="flex items-center justify-center gap-3"
           >
-            <CirclePlus size={16} />
+            <CirclePlus size={18} />
             Interface
           </Link>
         </Button>

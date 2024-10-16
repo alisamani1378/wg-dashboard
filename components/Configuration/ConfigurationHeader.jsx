@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BsChevronLeft } from "react-icons/bs";
+import { ChevronLeft } from "lucide-react";
 
 export const ConfigurationHeader = () => {
   return (
@@ -7,7 +7,7 @@ export const ConfigurationHeader = () => {
       href={"/"}
       className="w-fit flex items-center gap-4 justify-start text-[28px] font-bold hover:text-secondary"
     >
-      <BsChevronLeft />
+      <ChevronLeft size={32} />
       New Interface
     </Link>
   );
