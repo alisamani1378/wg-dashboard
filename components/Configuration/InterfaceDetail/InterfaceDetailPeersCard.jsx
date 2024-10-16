@@ -15,12 +15,27 @@ import {
 } from "lucide-react";
 
 export const InterfaceDetailPeersCard = ({ peerDetail }) => {
-  const { name, allowedIPs, publicKey, status, uploadVolume, downloadVolume } =
-    peerDetail;
+  const {
+    name,
+    allowedIPs,
+    publicKey,
+    status,
+    uploadVolume,
+    downloadVolume,
+    expireTime,
+  } = peerDetail;
   const [peerConfig, setPeerConfig] = useState();
   const [modalLoading, setModalLoading] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
   const [modalFor, setModalFor] = useState("");
+
+  const currentTime = Date.now();
+  const timeRemaining = expireTime - currentTime;
+  const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  );
+  const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
 
   const GetPeerConfigFetch = async (name) => {
     await GetPeerConfig(name)
@@ -55,6 +70,8 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
   const handleCloseQrCodeModal = () => {
     setOpenModalId(null);
   };
+
+  console.log(peerDetail);
 
   return (
     <>
@@ -101,7 +118,13 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
           </div>
         </div>
         <div className="col-span-3">
-          <p className="line-clamp-1">{name}</p>
+          <p className="line-clamp-1 font-semibold">{name}</p>
+          {timeRemaining > 0 && (
+            <p className="text-xs">
+              Expire at:{" "}
+              <span className="text-red-200">{`${days} Days , ${hours} Hours , ${minutes} Minutes`}</span>
+            </p>
+          )}
         </div>
         <div className="col-span-4 ">
           <span className="font-semibold">Public Key</span>
