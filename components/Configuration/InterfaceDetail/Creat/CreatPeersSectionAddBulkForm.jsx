@@ -154,7 +154,7 @@ export const CreatPeersSectionAddBulkForm = () => {
             {/*expire time*/}
             <div className="flex flex-col mt-3">
               <div>
-                <label className="label cursor-pointer justify-normal gap-2">
+                <label className="flex items-center cursor-pointer justify-normal gap-2">
                   <span className="label-text font-semibold text-gray-500">
                     On Hold
                   </span>
