@@ -15,6 +15,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+const ip = require("ip");
+
 export const ConfigurationForm = () => {
   const [configValue, setConfigValue] = useState({
     address: window.location.hostname,
@@ -31,6 +33,8 @@ export const ConfigurationForm = () => {
     ipAddress: "",
   });
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [ipInfo, setIpInfo] = useState(null);
+  const [howManyAvailableIPs, setHowManyAvailableIPs] = useState(null);
 
   const router = useRouter();
 
@@ -53,12 +57,37 @@ export const ConfigurationForm = () => {
     generateKeys();
   }, [generateKeys]);
 
+  const isValidCIDRip = (input) => {
+    const regexCIDR =
+      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/;
+
+    return regexCIDR.test(input);
+  };
+
+  const checkAvailability = (e) => {
+    e.preventDefault();
+    const { value } = e.target;
+    if (isValidCIDRip(value)) {
+      setIpInfo(value);
+    }
+  };
+
+  useEffect(() => {
+    if (ipInfo) {
+      const subnetInfo = ip.cidrSubnet(ipInfo);
+      const numHosts = subnetInfo.numHosts;
+      const availableIps = numHosts - 2;
+      setHowManyAvailableIPs(availableIps);
+    }
+  }, [ipInfo]);
+
   //   this is for input in form
   const handleConfigInputValue = (e) => {
     e.preventDefault();
+    const { name, value, type } = e.target;
     setConfigValue({
       ...configValue,
-      [e.target.name]: e.target.value,
+      [name]: type === " number" ? +value : value,
     });
   };
 
@@ -159,23 +188,22 @@ export const ConfigurationForm = () => {
         <input
           type="text"
           name="ipAddress"
-          onChange={handleConfigInputValue}
+          onChange={checkAvailability}
           placeholder="Ex: 10.0.0.1/24"
           className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none`}
         />
+        {howManyAvailableIPs && (
+          <span className="absolute right-2 top-1 bg-secondaryDark px-2 py-0.5 rounded-lg text-xs">
+            {howManyAvailableIPs}
+          </span>
+        )}
       </ConfigurationFormCard>
       <ConfigurationFormCard title={"Endpoint"}>
         <input
           type="text"
           name="endPoint"
           defaultValue={configValue.address}
-          onChange={(e) => {
-            e.preventDefault();
-            setConfigValue({
-              ...configValue,
-              ["endPoint"]: `${e.target.value}`,
-            });
-          }}
+          onChange={handleConfigInputValue}
           className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none  "
         />
       </ConfigurationFormCard>
