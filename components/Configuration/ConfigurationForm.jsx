@@ -228,14 +228,14 @@ export const ConfigurationForm = () => {
         </AccordionItem>
       </Accordion>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end text-white">
         <Button disabled={submitLoading}>
           Save Interface
           {submitLoading ? (
             <span>...</span>
           ) : (
             <>
-              <Import />
+              <Import size={20} />
             </>
           )}
         </Button>

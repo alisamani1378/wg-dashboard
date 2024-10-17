@@ -67,85 +67,85 @@ export const EditPeer = ({ EditPeerData }) => {
   };
 
   return (
-    <div className="w-full">
-      <p className="text-left text-lg font-bold mb-2">Edit Peer</p>
-      <form onSubmit={submitEditPeerForm} className="flex flex-col gap-2">
-        <div>
-          <label className="mb-1 block text-sm">DNS</label>
-          <input
-            type="text"
-            name="dns"
-            defaultValue={dns}
-            onChange={handleChangeEditedPeerValue}
-            className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm">MTU</label>
-          <input
-            type="number"
-            name="mtu"
-            defaultValue={mtu}
-            onChange={handleChangeEditedPeerValue}
-            className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm">Endpoint</label>
-          <input
-            type="text"
-            name="endPoint"
-            defaultValue={endPoint}
-            onChange={handleChangeEditedPeerValue}
-            className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm">Persistent keepalive</label>
-          <input
-            type="number"
-            name="persistentKeepalive"
-            defaultValue={persistentKeepalive}
-            onChange={handleChangeEditedPeerValue}
-            className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm">Endpoint Allowed IPs </label>
-          <input
-            type="text"
-            name="endpointAllowedIPs"
-            defaultValue={endpointAllowedIPs}
-            onChange={handleChangeEditedPeerValue}
-            className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm">Expire Time</label>
-          <input
-            type="number"
-            name="expireTime"
-            defaultValue={expireTime}
-            onChange={(e) => setExpireDays(e.target.value)}
-            className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm">Total Volume</label>
-          <input
-            type="number"
-            name="totalVolume"
-            defaultValue={totalVolume}
-            onChange={handleChangeEditedPeerValue}
-            className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
-          />
-        </div>
-        <div className="flex justify-end mt-2">
-          <Button disabled={submitLoading}>
-            Edit <Import />
-          </Button>
-        </div>
-      </form>
-    </div>
+    <form
+      onSubmit={submitEditPeerForm}
+      className="flex flex-col gap-2 text-primary"
+    >
+      <div>
+        <label className="mb-1 block text-sm">DNS</label>
+        <input
+          type="text"
+          name="dns"
+          defaultValue={dns}
+          onChange={handleChangeEditedPeerValue}
+          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm">MTU</label>
+        <input
+          type="number"
+          name="mtu"
+          defaultValue={mtu}
+          onChange={handleChangeEditedPeerValue}
+          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm">Endpoint</label>
+        <input
+          type="text"
+          name="endPoint"
+          defaultValue={endPoint}
+          onChange={handleChangeEditedPeerValue}
+          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm">Persistent keepalive</label>
+        <input
+          type="number"
+          name="persistentKeepalive"
+          defaultValue={persistentKeepalive}
+          onChange={handleChangeEditedPeerValue}
+          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm">Endpoint Allowed IPs </label>
+        <input
+          type="text"
+          name="endpointAllowedIPs"
+          defaultValue={endpointAllowedIPs}
+          onChange={handleChangeEditedPeerValue}
+          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm">Expire Time</label>
+        <input
+          type="number"
+          name="expireTime"
+          defaultValue={expireTime}
+          onChange={(e) => setExpireDays(e.target.value)}
+          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm">Total Volume</label>
+        <input
+          type="number"
+          name="totalVolume"
+          defaultValue={totalVolume}
+          onChange={handleChangeEditedPeerValue}
+          className="w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none"
+        />
+      </div>
+      <div className="flex justify-end mt-2 text-white">
+        <Button disabled={submitLoading}>
+          Edit <Import size={20} />
+        </Button>
+      </div>
+    </form>
   );
 };

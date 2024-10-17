@@ -1,9 +1,6 @@
 "use client";
 import { useState } from "react";
 import { GetPeerConfig } from "@/api/peer";
-import { QRCodeSVG } from "qrcode.react";
-import { EditPeer } from "@/components/Configuration/InterfaceDetail/EditPeer";
-import { ScaleLoader } from "react-spinners";
 import {
   ArrowDownToDot,
   ArrowUpFromDot,
@@ -13,6 +10,23 @@ import {
   QrCode,
   Share2,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { QRCodeSVG } from "qrcode.react";
+import { EditPeer } from "@/components/Configuration/InterfaceDetail/EditPeer";
 
 export const InterfaceDetailPeersCard = ({ peerDetail }) => {
   const {
@@ -25,9 +39,8 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
     expireTime,
   } = peerDetail;
   const [peerConfig, setPeerConfig] = useState();
-  const [modalLoading, setModalLoading] = useState(false);
-  const [openModalId, setOpenModalId] = useState(null);
-  const [modalFor, setModalFor] = useState("");
+
+  const [dialogContent, setDialogContent] = useState(null);
 
   const currentTime = Date.now();
   const timeRemaining = expireTime - currentTime;
@@ -41,37 +54,18 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
     await GetPeerConfig(name)
       .then((res) => {
         setPeerConfig(res?.data);
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const handleOpenQrCodeModal = async (name) => {
-    console.log(modalFor);
-    setModalLoading(true);
+  const handleOpenQrCodeDialog = async (name) => {
+    setDialogContent("qrcode");
+    console.log(name);
     await GetPeerConfigFetch(name);
-    setOpenModalId(name);
-    setModalFor("qrcode");
-    setTimeout(() => {
-      setModalLoading(false);
-    }, 1000);
   };
-
-  const handleOpenEditPeerModal = async (name) => {
-    setModalLoading(true);
-    setOpenModalId(name);
-    setModalFor("edit_peer");
-    setTimeout(() => {
-      setModalLoading(false);
-    }, 1000);
-  };
-
-  const handleCloseQrCodeModal = () => {
-    setOpenModalId(null);
-  };
-
-  console.log(peerDetail);
 
   return (
     <>
@@ -134,91 +128,69 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
           <span className="font-semibold">Allowed IP</span>
           <p className="tracking-widest">{allowedIPs}</p>
         </div>
-        <div className="col-span-1 flex items-center justify-end dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-sm m-1 bg-transparent hover:bg-primaryLight text-secondary"
-          >
-            <Ellipsis />
-          </div>
-          <ul
-            tabIndex={0}
-            className="dropdown-content menu bg-white/30 backdrop-blur rounded-box z-[1] w-[160px] shadow gap-2"
-          >
-            <li className="w-full !bg-transparent grid grid-cols-3 gap-2">
-              <span className="btn w-full !min-h-[32px] !h-[32px] p-1">
-                <Download size={18} />
-              </span>
-              <span
-                onClick={() => {
-                  setModalFor("qrcode");
-                  handleOpenQrCodeModal(name);
-                }}
-                className="btn w-full !min-h-[32px] !h-[32px] p-1"
-              >
-                <QrCode size={18} />
-              </span>
-              <span className="btn w-full !min-h-[32px] !h-[32px] p-1">
-                <Share2 size={18} />
-              </span>
-            </li>
-            <li className="w-full bg-transparent">
-              <span
-                onClick={() => {
-                  setModalFor("edit_peer");
-                  handleOpenEditPeerModal(name);
-                }}
-                className="btn w-full !min-h-[32px] !h-[32px] p-1 "
-              >
-                Edit <Pencil size={18} />
-              </span>
-            </li>
-          </ul>
-
-          {/*modal for each peer*/}
-          {openModalId === name && (
-            <dialog open className="modal bg-white/5 backdrop-blur">
-              <div className="modal-box bg-secondary text-primaryLight flex items-center justify-center">
-                <form method="dialog">
-                  <button
-                    onClick={handleCloseQrCodeModal}
-                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                  >
-                    ✕
-                  </button>
-                </form>
-                {modalLoading ? (
-                  <>
-                    <div className="w-full h-[240px] flex items-center justify-center">
-                      <ScaleLoader />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {modalFor === "qrcode" ? (
-                      <div className="w-full">
-                        <p className="text-left text-lg font-bold mb-5">
-                          Qr Code
-                        </p>
-                        <QRCodeSVG
-                          value={peerConfig}
-                          size={256}
-                          level={"H"}
-                          className="mx-auto"
-                        />
-                      </div>
-                    ) : modalFor === "edit_peer" ? (
+        <div className="flex items-center justify-end pr-4">
+          <Dialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="w-fit h-fit px-2 py-1 outline-none border border-primaryLight rounded-md hover:bg-primaryLight hover:text-secondary transition-all duration-100">
+                <Ellipsis />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-secondary">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem className="justify-between">
+                    <span className="px-1.5 py-1 border bordbg-primary rounded hover:bg-primary hover:text-white transition-all duration-150 cursor-pointer">
+                      <Download size={18} />
+                    </span>
+                    <DialogTrigger asChild>
+                      <span
+                        onClick={() => handleOpenQrCodeDialog(name)}
+                        className="px-1.5 py-1 border bordbg-primary rounded hover:bg-primary hover:text-white transition-all duration-150 cursor-pointer"
+                      >
+                        <QrCode size={18} />
+                      </span>
+                    </DialogTrigger>
+                    <span className="px-1.5 py-1 border bordbg-primary rounded hover:bg-primary hover:text-white transition-all duration-150 cursor-pointer">
+                      <Share2 size={18} />
+                    </span>
+                  </DropdownMenuItem>
+                  <DialogTrigger asChild>
+                    <DropdownMenuItem
+                      onClick={() => setDialogContent("editpeer")}
+                      className="flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      Edit <Pencil size={16} />
+                    </DropdownMenuItem>
+                  </DialogTrigger>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DialogContent className="w-11/12 sm:max-w-md !bg-secondary pt-8 [&>button]:text-primary">
+              <DialogHeader>
+                <DialogTitle className="text-primary pb-4">
+                  {dialogContent === "qrcode"
+                    ? "Qr Code"
+                    : dialogContent === "editpeer"
+                      ? "Edit Peer"
+                      : "null"}
+                </DialogTitle>
+                <DialogDescription>
+                  {dialogContent === "qrcode" ? (
+                    <>
+                      <QRCodeSVG
+                        value={peerConfig}
+                        size={256}
+                        level={"H"}
+                        className="mx-auto"
+                      />
+                    </>
+                  ) : dialogContent === "editpeer" ? (
+                    <>
                       <EditPeer EditPeerData={peerDetail} />
-                    ) : null}
-                  </>
-                )}
-              </div>
-              <form method="dialog" className="modal-backdrop">
-                <button onClick={handleCloseQrCodeModal}>close</button>
-              </form>
-            </dialog>
-          )}
+                    </>
+                  ) : null}
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </>

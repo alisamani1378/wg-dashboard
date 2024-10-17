@@ -4,7 +4,13 @@ import { GetPeer } from "@/api/peer";
 import toast from "react-hot-toast";
 import { InterfaceDetailPeersCard } from "@/components/Configuration/InterfaceDetail/InterfaceDetailPeersCard";
 import { usePathname } from "next/navigation";
-import { ArrowDownWideNarrow, ArrowUpNarrowWide, Search } from "lucide-react";
+import {
+  ArrowDownWideNarrow,
+  ArrowUpNarrowWide,
+  ChevronsLeft,
+  ChevronsRight,
+  Search,
+} from "lucide-react";
 
 export const InterfaceDetailPeers = () => {
   const [peers, setPeers] = useState();
@@ -124,46 +130,46 @@ export const InterfaceDetailPeers = () => {
               );
             })}
           </div>
+
           {/* this is pagination */}
-          <div className="flex justify-center items-center mt-5">
-            <div className="join">
-              <>
-                <button
-                  disabled={currentPage === 0}
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  className="join-item btn bg-primary text-secondary hover:bg-primaryLight disabled:bg-primaryLight disabled:text-secondary"
-                >
-                  «
-                </button>
-                {paginationArray
-                  .slice(startPage, endPage + 1)
-                  .map((pageNumber) => {
-                    return (
-                      <button
-                        key={pageNumber}
-                        onClick={() => handlePageChange(pageNumber)}
-                        className={`join-item btn bg-primary text-secondary hover:bg-primaryLight ${
-                          pageNumber === currentPage
-                            ? "btn-active bg-secondary !text-primary hover:bg-secondary"
-                            : ""
-                        }`}
-                      >
-                        {pageNumber + 1}
-                      </button>
-                    );
-                  })}
-                <button
-                  disabled={currentPage === paginationNumber}
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  className="join-item btn bg-primary text-secondary hover:bg-primaryLight disabled:bg-primaryLight disabled:text-secondary"
-                >
-                  »
-                </button>
-              </>
-            </div>
+          <div className="flex justify-center items-center gap-0.5 mt-8">
+            <>
+              <button
+                disabled={currentPage === 0}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className="w-10 h-10 flex items-center justify-center rounded border border-secondary text-secondary hover:bg-primaryLight disabled:hidden"
+              >
+                <ChevronsLeft size={16} />
+              </button>
+              {paginationArray
+                .slice(startPage, endPage + 1)
+                .map((pageNumber) => {
+                  return (
+                    <button
+                      key={pageNumber}
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`w-10 h-10 flex items-center justify-center rounded bg-primary text-secondary hover:bg-primaryLight ${
+                        pageNumber === currentPage
+                          ? "btn-active bg-secondary !text-primary hover:bg-secondary"
+                          : ""
+                      }`}
+                    >
+                      {pageNumber + 1}
+                    </button>
+                  );
+                })}
+              <button
+                disabled={currentPage === paginationNumber}
+                onClick={() => handlePageChange(currentPage + 1)}
+                className="w-10 h-10 flex items-center justify-center rounded border border-secondary text-secondary hover:bg-primaryLight disabled:hidden"
+              >
+                <ChevronsRight size={16} />
+              </button>
+            </>
           </div>
         </>
       )}
     </div>
   );
+  z;
 };
