@@ -14,10 +14,12 @@ import {
 
 export const InterfaceDetailPeers = () => {
   const [peers, setPeers] = useState();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(localStorage.getItem("currentPage")) || 0
+  );
   const [filter, setFilter] = useState({
     Take: 20,
-    Skip: 0,
+    Skip: 20 * currentPage,
     name: "",
   });
   const [peerLoading, setPeerLoading] = useState(true);
@@ -43,6 +45,10 @@ export const InterfaceDetailPeers = () => {
   };
 
   useEffect(() => {
+    localStorage.setItem("currentPage", currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
     const searchQuery = `?Take=${filter.Take}&Skip=${
       filter.Skip
     }&InterfaceName=${pathname.split("/")[2]}&name=${filter.name}`;
@@ -53,10 +59,10 @@ export const InterfaceDetailPeers = () => {
   const paginationNumber = Math.floor(peers?.countPeer / filter.Take);
   const paginationArray = Array.from(
     { length: paginationNumber + 1 },
-    (_, index) => index,
+    (_, index) => index
   );
 
-  const itemsPerPage = 5;
+  const itemsPerPage = filter.Take;
   let startPage = Math.max(0, currentPage - Math.floor(itemsPerPage / 2));
   let endPage = startPage + itemsPerPage - 1;
 
@@ -78,7 +84,8 @@ export const InterfaceDetailPeers = () => {
     const searchValue = searchNameRef.current.value;
 
     if (searchValue) {
-      setFilter({ ...filter, name: searchValue });
+      setFilter({ ...filter, Take: 20, Skip: 0, name: searchValue });
+      setCurrentPage(0);
     } else {
       setFilter({
         Take: 20,
@@ -111,15 +118,21 @@ export const InterfaceDetailPeers = () => {
             <div className="flex items-center gap-2">
               <span
                 onClick={() => setFilter({ ...filter, Take: 20 })}
-                className="w-[42px] h-[42px] flex justify-center items-center bg-primaryLight border border-secondary rounded-lg hover:bg-primary cursor-pointer transition-all duration-75"
+                className=" relative w-[42px] h-[42px] flex justify-center items-center bg-primaryLight border border-secondary rounded-lg hover:bg-primary cursor-pointer transition-all duration-75"
               >
                 <ArrowDownWideNarrow />
+                <span className=" absolute -top-2 -right-1 text-[10px] bg-secondaryDark/60 backdrop-blur rounded-full p-[2px]">
+                  20
+                </span>
               </span>
               <span
                 onClick={() => setFilter({ ...filter, Take: 40 })}
-                className="w-[42px] h-[42px] flex justify-center items-center bg-primaryLight border border-secondary rounded-lg hover:bg-primary cursor-pointer transition-all duration-75"
+                className=" relative w-[42px] h-[42px] flex justify-center items-center bg-primaryLight border border-secondary rounded-lg hover:bg-primary cursor-pointer transition-all duration-75"
               >
                 <ArrowUpNarrowWide />
+                <span className=" absolute -top-2 -right-1 text-[10px] bg-secondaryDark/60 backdrop-blur rounded-full p-[2px]">
+                  40
+                </span>
               </span>
             </div>
           </div>

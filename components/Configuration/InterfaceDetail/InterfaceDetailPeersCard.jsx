@@ -40,6 +40,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
     expireTime,
     totalVolume,
     totalReceivedVolume,
+    onHoldExpireDurection,
   } = peerDetail;
   const [peerConfig, setPeerConfig] = useState();
 
@@ -52,6 +53,10 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
     (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
   const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+
+  const onHoldDurationTime = Math.ceil(
+    onHoldExpireDurection / (1000 * 60 * 60 * 24)
+  );
 
   const progressValue =
     (totalVolume - totalReceivedVolume) / (1024 * 1024 * 1024).toFixed(2);
@@ -78,7 +83,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
       <div className=" relative col-span-1 w-full h-[240px] grid grid-cols-4 grid-rows-4 gap-2 p-2 border border-primaryLight rounded-md overflow-hidden">
         <Progress
           value={progressValue}
-          className="absolute top-0 left-0 w-full h-[6px] rounded-none [&>*]:bg-blue-800"
+          className={`absolute top-0 left-0 w-full h-1 rounded-none bg-transparent [&>div]:bg-gradient-to-l [&>div]:from-[#3cb340] [&>div]:via-[#b69b63] [&>div]:to-[rgba(255,74,0,1)]  `}
         />
 
         <div className="col-span-1 flex items-center">
@@ -127,11 +132,26 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
         </div>
         <div className="col-span-3">
           <p className="line-clamp-1 font-semibold">{name}</p>
-          {timeRemaining > 0 && (
+          {status === "active" || status === "limited" ? (
+            <>
+              {timeRemaining > 0 && (
+                <p className="text-xs">
+                  Expire at:{" "}
+                  <span className="text-red-200">{`${days} Days , ${hours} Hours , ${minutes} Minutes`}</span>
+                </p>
+              )}
+            </>
+          ) : status === "onhold" ? (
+            <>
+              <p className="text-sm">{`Expire ${onHoldDurationTime} Days After Start`}</p>
+            </>
+          ) : status === "expired" ? (
             <p className="text-xs">
-              Expire at:{" "}
-              <span className="text-red-200">{`${days} Days , ${hours} Hours , ${minutes} Minutes`}</span>
+              Expired:{" "}
+              <span className="text-red-200">{`${days * -1} Days , ${hours * -1} Hours , ${minutes * -1} Minutes ago`}</span>
             </p>
+          ) : (
+            ""
           )}
         </div>
         <div className="col-span-4">

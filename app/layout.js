@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
       >
         <InterfaceNameProvider>
           <Header />
-          <div className="w-screen max-w-[1440px] mx-auto h-[calc(100vh_-_56px)] flex">
+          <div className="max-w-[1440px] mx-auto h-[calc(100vh_-_56px)] flex">
             <Sidebar />
             <div className="w-full flex-1 px-4 py-6 overflow-y-auto scrollbar-hide">
               {children}
