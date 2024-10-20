@@ -25,6 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
 import { QRCodeSVG } from "qrcode.react";
 import { EditPeer } from "@/components/Configuration/InterfaceDetail/EditPeer";
 
@@ -37,6 +38,8 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
     uploadVolume,
     downloadVolume,
     expireTime,
+    totalVolume,
+    totalReceivedVolume,
   } = peerDetail;
   const [peerConfig, setPeerConfig] = useState();
 
@@ -46,9 +49,12 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
   const timeRemaining = expireTime - currentTime;
   const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
   const hours = Math.floor(
-    (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
   const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+
+  const progressValue =
+    (totalVolume - totalReceivedVolume) / (1024 * 1024 * 1024).toFixed(2);
 
   const GetPeerConfigFetch = async (name) => {
     await GetPeerConfig(name)
@@ -69,36 +75,44 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
 
   return (
     <>
-      <div className="col-span-1 w-full h-[240px] grid grid-cols-4 grid-rows-4 p-2 border border-primaryLight rounded-md ">
-        <span
-          className={`w-fit h-fit text-[12px] text-white px-1 py-0.5 rounded ${
-            status === "onhold"
-              ? "bg-yellow-700"
-              : status === "active"
-                ? "bg-green-700"
-                : status === "expired"
-                  ? "bg-red-700"
-                  : status === "limited"
-                    ? "bg-blue-700"
-                    : status === "disabled"
-                      ? "bg-indigo-700"
-                      : null
-          }`}
-        >
-          {status === "onhold" ? (
-            <>On Hold</>
-          ) : status === "active" ? (
-            <>Active</>
-          ) : status === "expired" ? (
-            <>Expired</>
-          ) : status === "limited" ? (
-            <>Limited</>
-          ) : status === "disabled" ? (
-            <>Disable</>
-          ) : (
-            ""
-          )}
-        </span>
+      <div className=" relative col-span-1 w-full h-[240px] grid grid-cols-4 grid-rows-4 gap-2 p-2 border border-primaryLight rounded-md overflow-hidden">
+        <Progress
+          value={progressValue}
+          className="absolute top-0 left-0 w-full h-[6px] rounded-none [&>*]:bg-blue-800"
+        />
+
+        <div className="col-span-1 flex items-center">
+          <span
+            className={`w-fit h-fit text-[12px] text-white px-1 py-0.5 rounded  ${
+              status === "onhold"
+                ? "bg-yellow-700"
+                : status === "active"
+                  ? "bg-green-700"
+                  : status === "expired"
+                    ? "bg-red-700"
+                    : status === "limited"
+                      ? "bg-blue-700"
+                      : status === "disabled"
+                        ? "bg-indigo-700"
+                        : null
+            }`}
+          >
+            {status === "onhold" ? (
+              <>On Hold</>
+            ) : status === "active" ? (
+              <>Active</>
+            ) : status === "expired" ? (
+              <>Expired</>
+            ) : status === "limited" ? (
+              <>Limited</>
+            ) : status === "disabled" ? (
+              <>Disable</>
+            ) : (
+              ""
+            )}
+          </span>
+        </div>
+
         <div className="col-start-2 col-end-5 xl:col-start-3 flex items-center justify-between">
           <div className="w-full flex items-center justify-center gap-1 text-blue-600 text-sm">
             <ArrowDownToDot size={16} />
@@ -120,13 +134,13 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
             </p>
           )}
         </div>
-        <div className="col-span-4 ">
+        <div className="col-span-4">
           <span className="font-semibold">Public Key</span>
           <p className="truncate">{publicKey}=</p>
         </div>
         <div className="col-span-3">
           <span className="font-semibold">Allowed IP</span>
-          <p className="tracking-widest">{allowedIPs}</p>
+          <p className="tracking-widest text-sm">{allowedIPs}</p>
         </div>
         <div className="flex items-center justify-end pr-4">
           <Dialog>

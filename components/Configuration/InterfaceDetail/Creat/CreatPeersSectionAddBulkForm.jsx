@@ -68,7 +68,7 @@ export const CreatPeersSectionAddBulkForm = () => {
         expireTime: 0,
       });
     } else if (expireTimevalue || changeOnHoldAndActiveData) {
-      const time = Math.floor(expireTimevalue.toDate().getTime() / 1000);
+      const time = Math.floor(expireTimevalue.toDate().getTime());
       setBulkValue({
         ...bulkValue,
         expireTime: time,
@@ -215,7 +215,7 @@ export const CreatPeersSectionAddBulkForm = () => {
                     setBulkValue({
                       ...bulkValue,
                       totalVolume: Math.round(
-                        e.target.value * 1024 * 1024 * 1024,
+                        e.target.value * 1024 * 1024 * 1024
                       ),
                     })
                   }
