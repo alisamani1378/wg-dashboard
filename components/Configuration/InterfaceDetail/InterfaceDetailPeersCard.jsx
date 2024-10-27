@@ -50,16 +50,15 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
   const timeRemaining = expireTime - currentTime;
   const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
   const hours = Math.floor(
-    (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
   );
   const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
 
   const onHoldDurationTime = Math.ceil(
-    onHoldExpireDurection / (1000 * 60 * 60 * 24)
+    onHoldExpireDurection / (1000 * 60 * 60 * 24),
   );
 
-  const progressValue =
-    (totalVolume - totalReceivedVolume) / (1024 * 1024 * 1024).toFixed(2);
+  const progressValue = (totalReceivedVolume / totalVolume) * 100;
 
   const GetPeerConfigFetch = async (name) => {
     await GetPeerConfig(name)
@@ -148,7 +147,9 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
           ) : status === "expired" ? (
             <p className="text-xs">
               Expired:{" "}
-              <span className="text-red-200">{`${days * -1} Days , ${hours * -1} Hours , ${minutes * -1} Minutes ago`}</span>
+              <span className="text-red-200">{`${days * -1} Days , ${
+                hours * -1
+              } Hours , ${minutes * -1} Minutes ago`}</span>
             </p>
           ) : (
             ""

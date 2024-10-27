@@ -14,9 +14,7 @@ import {
 
 export const InterfaceDetailPeers = () => {
   const [peers, setPeers] = useState();
-  const [currentPage, setCurrentPage] = useState(
-    parseInt(localStorage.getItem("currentPage")) || 0
-  );
+  const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState({
     Take: 20,
     Skip: 20 * currentPage,
@@ -45,6 +43,13 @@ export const InterfaceDetailPeers = () => {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const localCurrentPage = localStorage.getItem("currentPage");
+      setCurrentPage(+localCurrentPage || 0);
+    }
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem("currentPage", currentPage);
   }, [currentPage]);
 
@@ -59,10 +64,10 @@ export const InterfaceDetailPeers = () => {
   const paginationNumber = Math.floor(peers?.countPeer / filter.Take);
   const paginationArray = Array.from(
     { length: paginationNumber + 1 },
-    (_, index) => index
+    (_, index) => index,
   );
 
-  const itemsPerPage = filter.Take;
+  const itemsPerPage = 5;
   let startPage = Math.max(0, currentPage - Math.floor(itemsPerPage / 2));
   let endPage = startPage + itemsPerPage - 1;
 
