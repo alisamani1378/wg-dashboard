@@ -59,7 +59,7 @@ export const InterfaceDetailPeersCard = ({ peerDetail }) => {
   );
 
   const progressValue = (totalReceivedVolume / totalVolume) * 100;
-  console.log(progressValue);
+
   const GetPeerConfigFetch = async (name) => {
     await GetPeerConfig(name)
       .then((res) => {
