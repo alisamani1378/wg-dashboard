@@ -1,7 +1,7 @@
 "use client";
 import { PostConfigurationInterface } from "@/api/interface";
 import { ConfigurationFormCard } from "@/components/Configuration/ConfigurationFormCard";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import nacl from "tweetnacl";
@@ -19,8 +19,8 @@ const ip = require("ip");
 
 export const ConfigurationForm = () => {
   const [configValue, setConfigValue] = useState({
-    address: window.location.hostname,
-    endPoint: window.location.hostname,
+    address: "",
+    endPoint: "",
     saveConfig: true,
     preUp: null,
     postUp: null,
@@ -32,6 +32,17 @@ export const ConfigurationForm = () => {
     name: "",
     ipAddress: "",
   });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setConfigValue((prevConfig) => ({
+        ...prevConfig,
+        address: window.location.hostname,
+        endPoint: window.location.hostname,
+      }));
+    }
+  }, []);
+
   const [submitLoading, setSubmitLoading] = useState(false);
   const [ipInfo, setIpInfo] = useState(null);
   const [howManyAvailableIPs, setHowManyAvailableIPs] = useState(null);
@@ -67,9 +78,10 @@ export const ConfigurationForm = () => {
   const checkAvailability = (e) => {
     e.preventDefault();
     const { value } = e.target;
-    if (isValidCIDRip(value)) {
-      setIpInfo(value);
-    }
+    setIpInfo(value);
+    // if (isValidCIDRip(value)) {
+    //   setIpInfo(value);
+    // }
   };
 
   useEffect(() => {
@@ -99,19 +111,22 @@ export const ConfigurationForm = () => {
     e.preventDefault();
 
     if (!configValue.name) return toast.error("Configuration Name");
+    
     if (
       !configValue.listenPort ||
       configValue.listenPort > 65353 ||
       configValue.listenPort < 0
     )
       return toast.error("Listen Port");
-    if (
-      !configValue.ipAddress ||
-      !validIpAddressRegex.test(configValue.ipAddress)
-    )
-      return toast.error("Ip Address");
+
+    // if (
+    //   !configValue.ipAddress ||
+    //   !validIpAddressRegex.test(configValue.ipAddress)
+    // )
+    //   return toast.error("Ip Address");
 
     setSubmitLoading(true);
+
     await PostConfigurationInterface(configValue)
       .then((res) => {
         const { isSuccess, message } = res;
@@ -188,7 +203,7 @@ export const ConfigurationForm = () => {
         <input
           type="text"
           name="ipAddress"
-          onChange={checkAvailability}
+          onChange={handleConfigInputValue}
           placeholder="Ex: 10.0.0.1/24"
           className={`w-full bg-transparent rounded-lg border border-[#666666] border-stroke px-3 py-2 outline-none`}
         />
